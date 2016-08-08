@@ -1,9 +1,5 @@
-import sys
-sys.path.append("../objects")
-sys.path.append("../")
-from payment_object import *
-from utility import *
-
+from objects.payment_object import *
+from utility.utility import *
 
 def new_payment():
     pass

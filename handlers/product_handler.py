@@ -1,8 +1,6 @@
-import sys
-sys.path.append("../objects")
-sys.path.append("../")
-from product_object import *
-from utility import *
+from objects.product_object import *
+from utility.utility import *
 
 
 def build_temp_product():
+    pass

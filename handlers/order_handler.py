@@ -1,8 +1,5 @@
-import sys
-sys.path.append("../objects")
-sys.path.append("../")
-from order_object import *
-from utility import *
+from objects.order_object import *
+from utility.utility import *
 
 
 def new_order():
