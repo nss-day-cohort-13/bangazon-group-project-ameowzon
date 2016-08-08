@@ -32,9 +32,6 @@ class Meow():
     def select_payment():
         pass
 
-    def add_to_cart():
-        pass
-
     def generate_popularity_report():
         pass
 
