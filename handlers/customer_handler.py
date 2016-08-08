@@ -1,4 +1,6 @@
 sys.path.append("../objects")
+sys.path.append("../")
+from utility import *
 from customer_object import *
 
 
