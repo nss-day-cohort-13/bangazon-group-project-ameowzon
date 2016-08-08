@@ -1,8 +1,5 @@
-import sys
-sys.path.append("../objects")
-sys.path.append("../")
-from line_item_object import *
-from utility import *
+from objects.line_item_object import *
+from utility.utility import *
 
 
 def new_line_item():

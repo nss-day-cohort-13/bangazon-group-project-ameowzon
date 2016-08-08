@@ -1,8 +1,5 @@
-import sys
-sys.path.append("../objects")
-sys.path.append("../")
-from cart_object import *
-from utility import *
+from objects.cart_object import *
+from utility.utility import *
 
 
 def add_to_cart(uid, product_id, qty):

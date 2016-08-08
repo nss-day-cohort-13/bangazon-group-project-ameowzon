@@ -1,8 +1,5 @@
-import sys
-sys.path.append("../objects")
-sys.path.append("../")
-from customer_object import *
-from utility import *
+from objects.customer_object import *
+from utility.utility import *
 
 
 def new_customer():
