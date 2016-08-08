@@ -2,5 +2,10 @@ sys.path.append("../objects")
 from order_object import *
 
 
-class Order_Handler():
-    pass
+def Order_Handler():
+
+    def new_order():
+        pass
+
+    def build_temp_dict():
+        pass

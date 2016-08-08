@@ -13,9 +13,27 @@ from product_handler import *
 # from product_object import *
 
 
-class Meow():
-    print("Hey")
-    pass
+def Meow():
+    # print("Hey")
+    # pass
+
+    def set_current_user():
+        pass
+
+    def select_payment():
+        pass
+
+    def add_to_cart():
+        pass
+
+    def retrieve_cart():
+        pass
+
+    def calculate_total():
+        pass
+
+    def convert_to_completed():
+        pass
 
 if __name__ == '__main__':
     Meow()

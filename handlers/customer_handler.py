@@ -2,5 +2,10 @@ sys.path.append("../objects")
 from customer_object import *
 
 
-class Customer_Handler():
-    pass
+def Customer_Handler():
+
+    def new_customer():
+        pass
+
+    def build_temp_dict():
+        pass
