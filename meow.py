@@ -26,9 +26,6 @@ class Meow():
     def set_current_user():
         pass
 
-    def retrieve_cart():
-        pass
-
     def select_payment():
         pass
 
