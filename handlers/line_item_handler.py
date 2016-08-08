@@ -9,9 +9,5 @@ def new_line_item():
     pass
 
 
-def generate_popularity_report():
-    pass
-
-
-def build_temp_dict():
+def build_line_item_dict():
     pass

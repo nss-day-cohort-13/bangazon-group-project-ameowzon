@@ -13,11 +13,20 @@ from objects.product_object import *
 
 
 class Meow():
-    def print_hey():
-        print("Hey")
+
+    def calculate_total():
+        pass
+
+    def reset_user():
+        pass
+
+    def convert_to_completed():
         pass
 
     def set_current_user():
+        pass
+
+    def retrieve_cart():
         pass
 
     def select_payment():
@@ -26,13 +35,7 @@ class Meow():
     def add_to_cart():
         pass
 
-    def retrieve_cart():
-        pass
-
-    def calculate_total():
-        pass
-
-    def convert_to_completed():
+    def generate_popularity_report():
         pass
 
 if __name__ == '__main__':

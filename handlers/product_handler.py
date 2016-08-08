@@ -5,6 +5,4 @@ from product_object import *
 from utility import *
 
 
-def Product_Handler():
-
-    pass
+def build_temp_product():
