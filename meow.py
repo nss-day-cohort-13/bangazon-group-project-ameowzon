@@ -13,9 +13,10 @@ from product_handler import *
 # from product_object import *
 
 
-def Meow():
-    # print("Hey")
-    # pass
+class Meow():
+    def print_hey():
+        print("Hey")
+        pass
 
     def set_current_user():
         pass
@@ -36,4 +37,4 @@ def Meow():
         pass
 
 if __name__ == '__main__':
-    Meow()
+    Meow().print_hey()

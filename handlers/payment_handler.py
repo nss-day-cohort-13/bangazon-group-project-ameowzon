@@ -1,3 +1,4 @@
+import sys
 sys.path.append("../objects")
 from payment_object import *
 sys.path.append("../")
