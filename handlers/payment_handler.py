@@ -1,14 +1,13 @@
 import sys
 sys.path.append("../objects")
-from payment_object import *
 sys.path.append("../")
+from payment_object import *
 from utility import *
 
 
-def Payment_Handler():
+def new_payment():
+    pass
 
-    def new_payment():
-        pass
 
-    def build_temp_dict():
-        pass
+def build_temp_dict():
+    pass

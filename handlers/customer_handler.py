@@ -1,14 +1,13 @@
 import sys
 sys.path.append("../objects")
 sys.path.append("../")
-from utility import *
 from customer_object import *
+from utility import *
 
 
-def Customer_Handler():
+def new_customer():
+    pass
 
-    def new_customer():
-        pass
 
-    def build_temp_dict():
-        pass
+def build_temp_dict():
+    pass

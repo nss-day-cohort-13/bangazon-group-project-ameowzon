@@ -1,23 +1,24 @@
 import sys
 sys.path.append("../objects")
-from cart_object import *
 sys.path.append("../")
+from cart_object import *
 from utility import *
 
 
-def Cart_Handler():
+def add_to_cart():
+    pass
 
-    def add_to_cart():
-        pass
 
-    def retrieve_cart():
-        pass
+def retrieve_cart():
+    pass
 
-    def print_cart():
-        pass
 
-    # def convert_to_completed():
-    #     pass
+def print_cart():
+    pass
 
-    # def calculate_total():
-    #     pass
+
+# def convert_to_completed():
+#     pass
+
+# def calculate_total():
+#     pass
