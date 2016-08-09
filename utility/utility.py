@@ -24,7 +24,11 @@ def generate_uid():
 
 
 def write_json_file(data, output_file):
-    # print("data type = {0}".format(type(data)))
+    """ Writes the product dictionary to json file.
+        ===============
+        data = dictionary
+        output_file = the place to save the file.
+    """
     try:
         with open(output_file, 'w+') as file:
             json.dump(data, file)
