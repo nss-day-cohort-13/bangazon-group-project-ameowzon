@@ -4,6 +4,7 @@ from handlers.line_item_handler import *
 from handlers.order_handler import *
 from handlers.payment_handler import *
 from handlers.product_handler import *
+from handlers.cart_handler import *
 
 from objects.customer_object import *
 from objects.line_item_object import *
