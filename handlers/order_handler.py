@@ -25,11 +25,11 @@ def build_order_dict(cid=None, file='data/orders.txt'):
              all customers
     """
     order_lib = deserialize(file)
-    if cid == None:
-    return order_lib
+    if cid is None:
+        return order_lib
     else:
-    filtered_order_lib = dict()
+        filtered_order_lib = dict()
     for key, item in order_lib.items():
-      if item.customer_id == cid:
-        filtered_order_lib[key] = item
+        if item.customer_id == cid:
+            filtered_order_lib[key] = item
     return filtered_order_lib
