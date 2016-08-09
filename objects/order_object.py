@@ -1,6 +1,6 @@
 class Order:
 
-    def __init__(self, customer_id):
+    def __init__(self, customer_id, payment=None):
 
         self.customer_id = customer_id
-        self.payment = None
+        self.payment = payment
