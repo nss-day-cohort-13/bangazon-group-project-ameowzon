@@ -72,7 +72,10 @@ def generate_popularity_report():
 
 	# REFACTORED PRINT STATEMENT
 	product_name = products_lib[product]['name']
-
+	order = info["qty"]
+	customers = info["customers"]
+	revenue = info["revenue"]
+	# check product name length
 	if len(product_name) - 17 < 0:
 		product_name = "{1}{2}".format(
 			product_name,
@@ -80,3 +83,29 @@ def generate_popularity_report():
 		)
 	elif len(product_name) - 17 >= 0:
 		product_name = r_products(product_name)
+	# check order string length
+	if len(str(order)) - 11 < 0:
+		order = "{1}{2}".format(
+			order,
+			" " * (11 - len(str(order)))
+		)
+	elif len(order) - 11 >= 0:
+		order = r_order_cust(order)
+	# check customer string length
+	if len(str(customer)) - 11 < 0:
+		customer = "{1}{2}".format(
+			customer,
+			" " * (11 - len(str(customer)))
+		)
+	elif len(customer) - 11 >= 0:
+		customer = r_order_cust(customer)
+	# check revenue string length
+	if len(str(revenue)) - 15 < 0:
+		revenue = "{1}{2}".format(
+			revenue,
+			" " * (15 - len(str(revenue)))
+		)
+	elif len(revenue) - 15 >= 0:
+		revenue = r_revenue(revenue)
+	# print data
+	print("{1}{2}{3}{4}".format(product_name, order, customer, revenue))
