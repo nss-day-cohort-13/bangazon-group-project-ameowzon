@@ -6,8 +6,13 @@ import unittest
 
 class test_utility(unittest.TestCase):
     # HEY pass in test .txt files.
-    def test_get_value(self):
-        pass
+    def test_get_value_returns_none_when_not_found(self):
+        self.assertIsNone(get_value('data/test/test_order.txt', 'fake_uid'))
+
+    def test_get_value_returns_class_object_when_found(self):
+        test_obj = get_value('data/test/test_order.txt', 'fa8cb114-581e-4ffb-9c3b-134d9525c3ba')
+        self.assertIsNotNone(test_obj)
+        self.assertIsInstance(test_obj, Order)
 
     def test_add_new_item(self):
         # generate a UID here.

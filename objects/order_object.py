@@ -1,4 +1,6 @@
+class Order:
 
-class Order_Object():
+    def __init__(self, customer_id):
 
-    pass
+        self.customer_id = customer_id
+        self.payment = None
