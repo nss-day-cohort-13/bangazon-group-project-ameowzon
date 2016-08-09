@@ -15,7 +15,7 @@ def new_order(cid, pid, file='data/orders.txt'):
   return new_id
 
 
-def build_order_dict(file='data/orders.txt', cid=None):
+def build_order_dict(cid=None, file='data/orders.txt'):
   """ Returns a dictionary of orders matching the arguments passed in
       Method arguments
       ================
