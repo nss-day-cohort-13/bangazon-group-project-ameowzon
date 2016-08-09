@@ -64,6 +64,7 @@ class Meow():
     def shop_menu():
         # are you logged in or not?
         # if you are logged in:
+        # I THINK WE SHOULD HAVE THE CART REPORT BE SEPARATE.
         # 1. for each item in your cart, get_value to print the name, per item price, quantity, total.
         # 2. total up the line item totals to print a cart total. Do we want to separate out this into a separate function?
         # 3. load_product_library and for each available product index, get_value to print the name and price.
