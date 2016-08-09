@@ -59,7 +59,7 @@ class test_payment(unittest.TestCase):
         self.assertEqual(self.payment_obj.customer, 1234)
 
     def test_generate_payment_options_list(self):
-        payments_dict = generate_payments_menu("data/test/test_payments.txt")
+        payments_dict = generate_payments_menu("data/test/test_payments.txt", 1234)
         self.assertIn(self.payment_id, payments_dict.values())
 
 class test_temp_cart(unittest.TestCase):
