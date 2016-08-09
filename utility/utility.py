@@ -38,7 +38,6 @@ def get_value(read_file, uid):
     try:
         return to_search[uid]
     except KeyError:
-        print('There was an error getting the value you were looking for.')
         return None
 
 
