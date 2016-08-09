@@ -40,7 +40,7 @@ class test_customer(unittest.TestCase):
     def test_generate_customer_menu(self):
         # if you request a customer menu it returns a dictionary. The key of '1' is in it.
         self.assertIsInstance(type(generate_customer_menu("test_customer.txt")), dict)
-        self.assertIn(generate_customer_menu("test_customer.txt"), "1")
+        self.assertIn(generate_customer_menu("test_customer.txt").keys(), 1)
         # Add a customer, and then test.customer.txt has that customer ID as a value when you request the list.
         uid = generate_new_customer("test_customer.txt", "name", "address", "city", "state", "zipcode", "phone")
         self.assertIn(generate_customer_menu(), uid)

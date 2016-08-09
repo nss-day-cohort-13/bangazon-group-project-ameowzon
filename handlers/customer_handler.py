@@ -23,8 +23,17 @@ def instantiate_customer_object(name, address, city, state, zipcode, phone):
     return new_customer
 
 
-def generate_customer_menu(file_name):
+def generate_customer_menu():
     """
-    
+    deserializes customers.txt and generates a menu-ized dictionary for printing and setting. the key will be the number the user can press to select an option, and the value is the txt file's customer UID. Meow will use the utility get_value to print the names for each user etc.
+    ============
+    Method Arguments: None.
     """
-    pass
+    now_customers = deserialize("customers.txt")
+    index = 1
+    customer_menu = {}
+    for key, value in now_customers:
+        customer_menu[index] = key
+        index += 1
+
+    return customer_menu
