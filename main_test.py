@@ -166,14 +166,6 @@ class test_line_item(unittest.TestCase):
         self.assertEqual(self.line_obj.order_id, 1234)
         self.assertEqual(self.line_obj.product_id, 5678)
 
-    # def test_popularity_report_values(self):
-    #     self.line_id2 = generate_new_line_item("data/test/test_line_item.txt", 1122, 3344)
-    #     self.line_obj2 = get_value("data/test/test_line_item.txt", self.line_id2)
-    #     self.line_id3 = generate_new_line_item("data/test/test_line_item.txt", 5566, 7788)
-    #     self.line_obj3 = get_value("data/test/test_line_item.txt", self.line_id3)
-    #     pop_report = generate_popularity_report("data/test/test_line_item.txt")
-
-
 class test_meow(unittest.TestCase):
 
     def test_user_reset(self):
