@@ -37,10 +37,10 @@ class test_product(unittest.TestCase):
 class test_customer(unittest.TestCase):
 
     def test_generate_new_customer(self):
-        # the customer object is instantiated.
-        self.assertIsInstance(instantiate_customer_object("name", "address", "city", "state", "zipcode", "phone"), Customer_Object)
-        # the arguments get passed correctly.
         test_object = instantiate_customer_object("megan", "1234 User Lane", "Franklin", "Tennessee", "37067", "555-5555")
+        # the customer object is instantiated.
+        self.assertIsInstance(test_object, Customer_Object)
+        # the arguments get passed correctly.
         self.assertEqual(test_object.name, "megan")
         self.assertEqual(test_object.address, "1234 User Lane")
         self.assertEqual(test_object.city, "Franklin")
@@ -81,16 +81,41 @@ class test_payment(unittest.TestCase):
         payments_dict = generate_payments_menu("data/test/test_payments.txt", 1234)
         self.assertIn(self.payment_id, payments_dict.values())
 
+
 class test_temp_cart(unittest.TestCase):
 
-    def test_generate_new_cart(self):
-        pass
+    @classmethod
+    def setUpClass(self):
+        self.sample_user = generate_new_customer("data/test/test_customer.txt", "megan", "1234 user lane", "franklin", "tennessee", "37067", "555-5555")
 
-    def test_view_cart(self):
-        pass
+    def test_cart_default(self):
+        # when you create a user, it makes an empty cart property.
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertEqual(user_obj.cart, {})
 
     def test_add_item_to_cart(self):
-        pass
+        # item adds correctly to cart.
+        add_item_to_cart("data/test/test_customer.txt", self.sample_user, "product_id", 2)
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertIn("product_id", user_obj["cart"].keys())
+        self.assertEqual(2, user_obj.cart["product_id"])
+
+        # if you add more of the same item to the cart, it adds the total together.
+        add_item_to_cart("data/test/test_customer.txt", self.sample_user, "product_id", 1)
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertEqual(user_obj.cart["product_id"],  3)
+
+        # if you add a different item to the cart, it adds it with the correct quantity, and the first item is still there.
+        add_item_to_cart("data/test/test_customer.txt", self.sample_user, "another_product_id", 1)
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertEqual(3, user_obj.cart["product_id"])
+        self.assertEqual(1, user_obj.cart["another_product_id"])
+
+    def test_empty_cart(self):
+        # if you empty your cart, it's still there just empty.
+        delete_cart("data/test/test_carts.txt", sample_uid)
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertEqual(user_obj.cart, {})
 
 
 class test_order(unittest.TestCase):
