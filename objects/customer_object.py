@@ -7,3 +7,4 @@ class Customer_Object():
         self.state = state
         self.zipcode = zipcode
         self.phone = phone
+        self.cart = {}

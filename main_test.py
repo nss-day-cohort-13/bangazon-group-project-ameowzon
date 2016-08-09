@@ -8,7 +8,7 @@ class test_utility(unittest.TestCase):
         self.assertIsNone(get_value('data/test/test_order.txt', 'fake_uid'))
 
     def test_get_value_returns_class_object_when_found(self):
-        test_obj = get_value('data/test/test_order.txt', 'b91265d9-2dd1-4909-95db-bb2b4245d939')
+        test_obj = get_value('data/test/test_order.txt', '9a4618fa-88d3-43e2-8556-7de4295deef3')
         self.assertIsNotNone(test_obj)
         self.assertIsInstance(test_obj, Order)
 
@@ -37,10 +37,10 @@ class test_product(unittest.TestCase):
 class test_customer(unittest.TestCase):
 
     def test_generate_new_customer(self):
-        # the customer object is instantiated.
-        self.assertIsInstance(instantiate_customer_object("name", "address", "city", "state", "zipcode", "phone"), Customer_Object)
-        # the arguments get passed correctly.
         test_object = instantiate_customer_object("megan", "1234 User Lane", "Franklin", "Tennessee", "37067", "555-5555")
+        # the customer object is instantiated.
+        self.assertIsInstance(test_object, Customer_Object)
+        # the arguments get passed correctly.
         self.assertEqual(test_object.name, "megan")
         self.assertEqual(test_object.address, "1234 User Lane")
         self.assertEqual(test_object.city, "Franklin")
@@ -59,9 +59,6 @@ class test_customer(unittest.TestCase):
         # Add a customer, and then test.customer.txt has that customer ID as a value when you request the list.
         lib = generate_customer_menu("data/test/test_customer.txt")
         self.assertIn(uid, lib.values())
-        customer_obj = get_value("data/test/test_customer.txt", lib[1])
-        self.assertEqual(customer_obj.name, "name")
-        self.assertEqual(customer_obj.address, "address")
 
 
 class test_payment(unittest.TestCase):
@@ -81,27 +78,80 @@ class test_payment(unittest.TestCase):
         payments_dict = generate_payments_menu("data/test/test_payments.txt", 1234)
         self.assertIn(self.payment_id, payments_dict.values())
 
+
 class test_temp_cart(unittest.TestCase):
 
-    def test_generate_new_cart(self):
-        pass
+    @classmethod
+    def setUpClass(self):
+        self.sample_user = generate_new_customer("data/test/test_customer.txt", "megan", "1234 user lane", "franklin", "tennessee", "37067", "555-5555")
 
-    def test_view_cart(self):
-        pass
+    def test_cart_default(self):
+        # when you create a user, it makes an empty cart property.
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertEqual(user_obj.cart, {})
 
     def test_add_item_to_cart(self):
-        pass
+        # item adds correctly to cart.
+        add_item_to_cart("data/test/test_customer.txt", self.sample_user, "product_id", 2)
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertIn("product_id", user_obj.cart.keys())
+        self.assertEqual(2, user_obj.cart["product_id"])
+
+        # if you add more of the same item to the cart, it adds the total together.
+        add_item_to_cart("data/test/test_customer.txt", self.sample_user, "product_id", 1)
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertEqual(user_obj.cart["product_id"],  3)
+
+        # if you add a different item to the cart, it adds it with the correct quantity, and the first item is still there.
+        add_item_to_cart("data/test/test_customer.txt", self.sample_user, "another_product_id", 1)
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertEqual(3, user_obj.cart["product_id"])
+        self.assertEqual(1, user_obj.cart["another_product_id"])
+
+        # if you empty your cart, it's still there just empty.
+        delete_cart("data/test/test_customer.txt", self.sample_user)
+        user_obj = get_value("data/test/test_customer.txt", self.sample_user)
+        self.assertEqual(user_obj.cart, {})
 
 
 class test_order(unittest.TestCase):
 
     def test_generate_new_order(self):
-        pass
+        # This test is almost exactly the same as 'test_add_new_item';
+        # It simply checks that the values passed through this generate order
+        # function create the order and add it to the order library as expected
+        cid = '123'
+        pid = '456'
+        returned_oid = new_order(cid, pid, 'data/test/test_order.txt')
 
-    def test_add_product_to_order(self):
-        # adding productID as key, quantity as value.
-        # please also test adding another of the same object to the order.
-        pass
+        cid_2 = '222'
+        pid_2 = '444'
+        second_oid = new_order(cid_2, pid_2, 'data/test/test_order.txt')
+
+        added_obj = get_value('data/test/test_order.txt', returned_oid)
+        self.assertIsInstance(added_obj, Order)
+        self.assertEqual(added_obj.customer_id, '123')
+        self.assertEqual(added_obj.payment, '456')
+
+        # Clean up (delete the item just added)
+        lib = deserialize('data/test/test_order.txt')
+        del lib[returned_oid]
+        del lib[second_oid]
+        serialize('data/test/test_order.txt', lib)
+
+    def test_build_temp_customer_orders_dict(self):
+        cid = '123'
+        pid = '456'
+        returned_oid = new_order(cid, pid, 'data/test/test_order.txt')
+
+        order_lib = build_order_dict('data/test/test_order.txt', '123')
+        check_lib = [(item.customer_id == '123') for key, item in order_lib.items()]
+        self.assertFalse(False in check_lib)
+
+        # Clean up (delete the item just added)
+        lib = deserialize('data/test/test_order.txt')
+        del lib[returned_oid]
+        serialize('data/test/test_order.txt', lib)
 
 
 class test_line_item(unittest.TestCase):
