@@ -1,29 +1,19 @@
-from objects.cart_object import *
 from utility.utility import *
 
 
-def add_to_cart(uid, product_id, qty):
-    '''
-    
-    '''
-    pass
-    # returns true if success
+def add_item_to_cart(file_name, user_id, product_id, qty):
+
+    customer_lib = deserialize(file_name)
+    try:
+        customer_lib[user_id].cart[product_id] += qty
+    except KeyError:
+        customer_lib[user_id].cart[product_id] = qty
+
+    serialize(file_name, customer_lib)
 
 
-def retrieve_cart():
-    pass
+def delete_cart(file_name, user_id):
 
-
-def clear_cart():
-    pass
-
-
-def print_cart():
-    pass
-
-
-# def convert_to_completed():
-#     pass
-
-# def calculate_total():
-#     pass
+    customer_lib = deserialize(file_name)
+    customer_lib[user_id].cart = {}
+    serialize(file_name, customer_lib)

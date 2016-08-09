@@ -59,9 +59,6 @@ class test_customer(unittest.TestCase):
         # Add a customer, and then test.customer.txt has that customer ID as a value when you request the list.
         lib = generate_customer_menu("data/test/test_customer.txt")
         self.assertIn(uid, lib.values())
-        customer_obj = get_value("data/test/test_customer.txt", lib[1])
-        self.assertEqual(customer_obj.name, "name")
-        self.assertEqual(customer_obj.address, "address")
 
 
 class test_payment(unittest.TestCase):
@@ -97,7 +94,7 @@ class test_temp_cart(unittest.TestCase):
         # item adds correctly to cart.
         add_item_to_cart("data/test/test_customer.txt", self.sample_user, "product_id", 2)
         user_obj = get_value("data/test/test_customer.txt", self.sample_user)
-        self.assertIn("product_id", user_obj["cart"].keys())
+        self.assertIn("product_id", user_obj.cart.keys())
         self.assertEqual(2, user_obj.cart["product_id"])
 
         # if you add more of the same item to the cart, it adds the total together.
@@ -111,9 +108,8 @@ class test_temp_cart(unittest.TestCase):
         self.assertEqual(3, user_obj.cart["product_id"])
         self.assertEqual(1, user_obj.cart["another_product_id"])
 
-    def test_empty_cart(self):
         # if you empty your cart, it's still there just empty.
-        delete_cart("data/test/test_carts.txt", sample_uid)
+        delete_cart("data/test/test_customer.txt", self.sample_user)
         user_obj = get_value("data/test/test_customer.txt", self.sample_user)
         self.assertEqual(user_obj.cart, {})
 
