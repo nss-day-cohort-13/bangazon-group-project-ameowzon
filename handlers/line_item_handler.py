@@ -38,15 +38,15 @@ def generate_popularity_report():
 		price = products_lib[product].price
 		info["revenue"] = locale.currentcy((info["qty"] * price), grouping=True)
 	# print report
-	print("\nProduct          Orders     Customers  Revenue        ")
-	print("\n*******************************************************")
+	print("Product          Orders     Customers  Revenue        ")
+	print("*******************************************************")
 	# check if product name is shorter than 15 characters
 	for product, info in li_dict.items():
 		if len( products_lib[product]["name"] ) - 17 < 0:
 			# add appropriate amount of spaces after product name (17 - length of product name)
 			product_name = "{1}{2}".format(
 				products_lib[product]["name"],
-				" "*(15-( len(products_lib[product]["name"]) )
+				" "*(17-( len(products_lib[product]["name"]) )
 			))
 			# print inner columns with appropriate amount of spaces after each piece of information
 			print("{1}{2}{3}{4}".format(
@@ -65,4 +65,18 @@ def generate_popularity_report():
 				("{1}{2}".format(len( info["customers"] ), " "*(11 - len( info["customers"] ))))
 				("{1}{2}".format(info["revenue"], " "*(15 - len( info["revenue"] ))))
 			))
-	print("\n*******************************************************")
+	print("*******************************************************")
+
+
+
+
+	# REFACTORED PRINT STATEMENT
+	product_name = products_lib[product]['name']
+
+	if len(product_name) - 17 < 0:
+		product_name = "{1}{2}".format(
+			product_name,
+			" " * (17 - len(product_name))
+		)
+	elif len(product_name) - 17 >= 0:
+		product_name = r_products(product_name)
