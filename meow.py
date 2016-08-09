@@ -33,7 +33,8 @@ class Meow():
         pass
 
 if __name__ == '__main__':
-    # Meow().print_hey()
-    print_hello()
+
+    build_temp_product()
+    # load_temp_product()
 
     # objects are classes
