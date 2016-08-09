@@ -49,17 +49,17 @@ class test_customer(unittest.TestCase):
         self.assertEqual(test_object.phone, "555-5555")
 
         # the overarching generation function returns a string value. It'll be a unique ID. Test for whether the values get serialized correctly is below, in generate_customer_list.
-        self.assertEqual(type(generate_new_customer("test_customer.txt", "chase", "1234 Sesame Street", "Nashville", "Tennessee")), str)
+        self.assertEqual(type(generate_new_customer("data/test/test_customer.txt", "chase", "1234 Sesame Street", "Nashville", "Tennessee", "37067", "555-5555")), str)
 
     def test_generate_customer_menu(self):
+        uid = generate_new_customer("data/test/test_customer.txt", "name", "address", "city", "state", "zipcode", "phone")
         # if you request a customer menu it returns a dictionary. The key of '1' is in it.
-        self.assertIsInstance(type(generate_customer_menu("test_customer.txt")), dict)
-        self.assertIn(generate_customer_menu("test_customer.txt").keys(), 1)
+        self.assertIsInstance(generate_customer_menu("data/test/test_customer.txt"), dict)
+        self.assertIn(1, generate_customer_menu("data/test/test_customer.txt").keys())
         # Add a customer, and then test.customer.txt has that customer ID as a value when you request the list.
-        uid = generate_new_customer("test_customer.txt", "name", "address", "city", "state", "zipcode", "phone")
-        self.assertIn(generate_customer_menu(), uid)
-
-        customer_obj = get_value(uid)
+        lib = generate_customer_menu("data/test/test_customer.txt")
+        self.assertIn(uid, lib.values())
+        customer_obj = get_value("data/test/test_customer.txt", lib[1])
         self.assertEqual(customer_obj.name, "name")
         self.assertEqual(customer_obj.address, "address")
 
