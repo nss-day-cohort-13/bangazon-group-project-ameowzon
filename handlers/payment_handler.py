@@ -3,7 +3,8 @@ from utility.utility import *
 
 def generate_new_payment(file, name, account_number, cust_key):
     new_payment = Payment_Object(name, account_number, cust_key)
-    add_to_file(file, new_payment)
+    payment_id = add_to_file(file, new_payment)
+    return payment_id
 
 def generate_payments_menu(file):
 	lib = deserialize(file)
