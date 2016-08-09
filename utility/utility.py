@@ -12,7 +12,9 @@ def deserialize(input_file):
             return pickle.load(file)
     except EOFError:
         print('{0} is empty.'.format(input_file))
-        return None
+        return {}
+    except FileNotFoundError:
+        return {}
 
 
 def serialize(output_file, updated_info):
