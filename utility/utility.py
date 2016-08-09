@@ -1,7 +1,7 @@
 import pickle
 import uuid
 
-def deserialize(self, input_file):
+def deserialize(input_file):
     """ Reads binary data from the file passed in
         Method arguments
         ================
@@ -15,7 +15,7 @@ def deserialize(self, input_file):
         return None
 
 
-def serialize(self, output_file, updated_info):
+def serialize(output_file, updated_info):
     """ Writes binary data to the file passed in
         Method arguments
         ================
@@ -26,7 +26,7 @@ def serialize(self, output_file, updated_info):
         pickle.dump(updated_info, file)
 
 
-def get_value(self, read_file, uid):
+def get_value(read_file, uid):
     """ Returns an object from read_file that matches
         the uid provided as argument
         Method arguments
@@ -35,13 +35,14 @@ def get_value(self, read_file, uid):
         uid - the uid to match
     """
     to_search = deserialize(read_file)
-        try:
-            return to_search[uid]
-        except KeyError:
-            print('There was an error getting the value you were looking for.')
+    try:
+        return to_search[uid]
+    except KeyError:
+        print('There was an error getting the value you were looking for.')
+        return None
 
 
-def add_to_file(self, write_file, write_value):
+def add_to_file(write_file, write_value):
     """ Adds the provided value to the provided file
         Method arguments
         ================
@@ -49,5 +50,7 @@ def add_to_file(self, write_file, write_value):
         write_value - the new value to be written
     """
     to_write = deserialize(write_file)
-    to_write[str(uuid.uuid4())] = write_value
-    serialize(to_write)
+    uid = str(uuid.uuid4())
+    to_write[uid] = write_value
+    serialize(write_file, to_write)
+    return uid
