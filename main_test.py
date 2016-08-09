@@ -6,14 +6,28 @@ import unittest
 
 class test_utility(unittest.TestCase):
     # HEY pass in test .txt files.
-    def test_get_value(self):
-        pass
+    def test_get_value_returns_none_when_not_found(self):
+        self.assertIsNone(get_value('data/test/test_order.txt', 'fake_uid'))
+
+    def test_get_value_returns_class_object_when_found(self):
+        test_obj = get_value('data/test/test_order.txt', 'b91265d9-2dd1-4909-95db-bb2b4245d939')
+        self.assertIsNotNone(test_obj)
+        self.assertIsInstance(test_obj, Order)
 
     def test_add_new_item(self):
-        # generate a UID here.
-        # deserialize, add new item to library, reserialize. return UID.
-        pass
+        oid = '123'
+        test_obj = Order(oid)
+        returned_oid = add_to_file('data/test/test_order.txt', test_obj)
 
+        added_obj = get_value('data/test/test_order.txt', returned_oid)
+        self.assertIsInstance(added_obj, Order)
+        self.assertEqual(added_obj.customer_id, '123')
+        self.assertEqual(added_obj.payment, None)
+
+        # Clean up (delete the item just added)
+        lib = deserialize('data/test/test_order.txt')
+        del lib[returned_oid]
+        serialize('data/test/test_order.txt', lib)
 
 class test_product(unittest.TestCase):
 
