@@ -6,14 +6,28 @@ import unittest
 
 class test_utility(unittest.TestCase):
     # HEY pass in test .txt files.
-    def test_get_value(self):
-        pass
+    def test_get_value_returns_none_when_not_found(self):
+        self.assertIsNone(get_value('data/test/test_order.txt', 'fake_uid'))
+
+    def test_get_value_returns_class_object_when_found(self):
+        test_obj = get_value('data/test/test_order.txt', 'b91265d9-2dd1-4909-95db-bb2b4245d939')
+        self.assertIsNotNone(test_obj)
+        self.assertIsInstance(test_obj, Order)
 
     def test_add_new_item(self):
-        # generate a UID here.
-        # deserialize, add new item to library, reserialize. return UID.
-        pass
+        oid = '123'
+        test_obj = Order(oid)
+        returned_oid = add_to_file('data/test/test_order.txt', test_obj)
 
+        added_obj = get_value('data/test/test_order.txt', returned_oid)
+        self.assertIsInstance(added_obj, Order)
+        self.assertEqual(added_obj.customer_id, '123')
+        self.assertEqual(added_obj.payment, None)
+
+        # Clean up (delete the item just added)
+        lib = deserialize('data/test/test_order.txt')
+        del lib[returned_oid]
+        serialize('data/test/test_order.txt', lib)
 
 class test_product(unittest.TestCase):
 
@@ -35,18 +49,18 @@ class test_payment(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.payment_id = generate_new_payment("/data/test/test_payments.txt", "Visa", 11223344, 1234)
-        self.payment_obj = get_value("/data/test/test_payments.txt", self.payment_id)
+        self.payment_id = generate_new_payment("data/test/test_payments.txt", "Visa", 11223344, 1234)
+        self.payment_obj = get_value("data/test/test_payments.txt", self.payment_id)
 
     def test_generate_new_payment(self):
         self.assertIsInstance(self.payment_obj, Payment_Object)
-        self.assertEqual(self.payment_obj["name"], "Visa")
-        self.assertEqual(self.payment_obj["account_number"], 11223344)
-        self.assertEqual(self.payment_obj["customer"], 1234)
+        self.assertEqual(self.payment_obj.name, "Visa")
+        self.assertEqual(self.payment_obj.account_number, 11223344)
+        self.assertEqual(self.payment_obj.customer, 1234)
 
     def test_generate_payment_options_list(self):
-        payments_dict = generate_payments_menu("/data/test/test_payments.txt")
-        self.assertIn(self.payment_id, payments_dict)
+        payments_dict = generate_payments_menu("data/test/test_payments.txt")
+        self.assertIn(self.payment_id, payments_dict.values())
 
 class test_temp_cart(unittest.TestCase):
 
