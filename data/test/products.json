@@ -1,0 +1,40 @@
+{
+	"cats": [
+		{
+			"name": "EDM Cat",
+			"price": 2999
+		},
+		{
+			"name": "Liger",
+			"price": 25000
+		},
+		{
+			"name": "Garfield",
+			"price": 12000
+		},
+		{
+			"name": "Simba",
+			"price": 5000
+		},
+		{
+			"name": "Sheer Khan",
+			"price": 20000
+		},
+		{
+			"name": "Hobbes",
+			"price": 20
+		},
+		{
+			"name": "Amazon Catfish",
+			"price": 500
+		},
+		{
+			"name": "Bast",
+			"price": 30000
+		},
+		{
+			"name": "Mr. Mistoffelees",
+			"price": 4848
+		}
+	]
+}

@@ -27,11 +27,13 @@ class test_utility(unittest.TestCase):
         del lib[returned_oid]
         serialize('data/test/test_order.txt', lib)
 
+
 class test_product(unittest.TestCase):
 
     def test_generate_product_list(self):
         # list of all the products.
-        pass
+        self.assertIsInstance(generate_product_list("./data/products"), dict)
+        # need more tests
 
 
 class test_customer(unittest.TestCase):
