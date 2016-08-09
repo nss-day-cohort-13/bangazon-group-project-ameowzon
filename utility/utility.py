@@ -49,5 +49,7 @@ def add_to_file(write_file, write_value):
         write_value - the new value to be written
     """
     to_write = deserialize(write_file)
-    to_write[str(uuid.uuid4())] = write_value
-    serialize(to_write)
+    uid = str(uuid.uuid4())
+    to_write[uid] = write_value
+    serialize(write_file, to_write)
+    return uid
