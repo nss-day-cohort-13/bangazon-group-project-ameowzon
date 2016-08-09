@@ -2,7 +2,7 @@ from objects.payment_object import *
 from utility.utility import *
 
 def generate_new_payment(file, name, account_number, cust_key):
-    new_payment = Payment(name, account_number, cust_key)
+    new_payment = Payment_Object(name, account_number, cust_key)
     add_to_file(file, new_payment)
 
 def generate_payments_menu(file):
