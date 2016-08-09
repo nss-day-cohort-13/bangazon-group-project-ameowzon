@@ -66,12 +66,20 @@ class test_customer(unittest.TestCase):
 
 class test_payment(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(self):
+        self.payment_id = generate_new_payment("data/test/test_payments.txt", "Visa", 11223344, 1234)
+        self.payment_obj = get_value("data/test/test_payments.txt", self.payment_id)
+
     def test_generate_new_payment(self):
-        pass
+        self.assertIsInstance(self.payment_obj, Payment_Object)
+        self.assertEqual(self.payment_obj.name, "Visa")
+        self.assertEqual(self.payment_obj.account_number, 11223344)
+        self.assertEqual(self.payment_obj.customer, 1234)
 
     def test_generate_payment_options_list(self):
-        pass
-
+        payments_dict = generate_payments_menu("data/test/test_payments.txt", 1234)
+        self.assertIn(self.payment_id, payments_dict.values())
 
 class test_temp_cart(unittest.TestCase):
 
