@@ -38,8 +38,9 @@ def generate_popularity_report():
 	li_dict = {obj.product_id: {"qty": 0, "customers": set(), "revenue": 0} for uid, obj in li_lib.items()}
 	# loop through all line items and populate corresponding product keys with appropriate info
 	for uid, obj in li_lib.items():
+		customer = orders_lib[obj.order_id].customer_id
 		li_dict[obj.product_id]["qty"] += 1
-		li_dict[obj.product_id]["customers"].append(orders_lib[obj.order_id].customer_id)
+		li_dict[obj.product_id]["customers"].append(customer)
 	# calculate revenue
 	for product, info in li_dict.items():
 		price = products_lib[product].price
@@ -47,7 +48,7 @@ def generate_popularity_report():
 
 	########## PRINT REPORT ##########
 	print("Product          Orders     Customers  Revenue        ")
-	print("*******************************************************")
+	print("*" * 54)
 	# check if product name is shorter than 15 characters
 	for product, info in li_dict.items():
 		if len( products_lib[product]["name"] ) - 17 < 0:
@@ -73,7 +74,7 @@ def generate_popularity_report():
 				("{1}{2}".format(len( info["customers"] ), " "*(11 - len( info["customers"] ))))
 				("{1}{2}".format(info["revenue"], " "*(15 - len( info["revenue"] ))))
 			))
-	print("*******************************************************")
+	print("*" * 54)
 
 	########## REFACTORED PRINT STATEMENT ##########
 
@@ -84,7 +85,7 @@ def generate_popularity_report():
 	order_list, customer_list, revenue_list = [],[],[]
 
 	print("Product          Orders     Customers  Revenue        ")
-	print("*******************************************************")
+	print("*" * 54)
 
 	for product, info in li_dict.items():
 		# check product name length
@@ -131,7 +132,7 @@ def generate_popularity_report():
 		# print data
 		print("{1}{2}{3}{4}".format(product_name, order, customer, locale.currency(revenue, grouping=True)))
 
-	print("*******************************************************")
+	print("*" * 54)
 
 	########## CALCULATE TOTALS ##########
 
