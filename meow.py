@@ -90,12 +90,12 @@ try:
                     self.generate_popularity_report()
 
                 elif choice == 5:
-                    self.quit_menu()
+                    self.quit_menu(self.logged_in_menu)
 
             except ValueError:
                 self.logged_in_menu()
 
-        def quit_menu(self):
+        def quit_menu(self, back_to_menu):
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(12, 40, 'Are you sure you want to exit? [ y / n ]')
@@ -110,10 +110,10 @@ try:
                     if self.current_user == None:
                         self.unlogged_in_menu()
                     else:
-                        self.logged_in_menu()
+                        back_to_menu()
 
             except ValueError:
-                self.logged_in_menu()
+                back_to_menu()
 
         def user_menu(self):
             # generate the customer menu.
