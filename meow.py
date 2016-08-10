@@ -201,7 +201,10 @@ try:
             if self.current_user is not None:
                 # view your cart or note that it's empty.
                 self.view_cart()
-                self.screen.addstr(row, 40, "Press the number of the item you'd like to add to your cart,\nOr press'c' to check out, 'b' to go back, 'x' to exit.")
+                self.screen.addstr(row, 22, "Press the number of the item you'd like to add to your cart.")
+                row += 1
+                self.screen.addstr(row, 22, "Or press'c' to check out, 'b' to go back, 'x' to exit.")
+                row += 1
 
                 try:
                     next_step = chr(self.screen.getch())
@@ -213,7 +216,7 @@ try:
                         self.logged_in_menu()
 
                     elif next_step == "c":  # Check Out.
-                        self.payment_options_menu(True)
+                        self.payment_options_menu(completing=True)
 
                     else:
                         self.screen.addstr(row, 40, next_step)
@@ -237,7 +240,7 @@ try:
             else:
                 # if you're not logged in you can view products, but you can't do anything with a cart.
                 self.screen.addstr(row, 40, "You are not logged in.")
-                self.screen.addstr(row + 1, 40, "Press 'b' to go back and choose a login option, or x to exit.")
+                self.screen.addstr(row + 1, 12, "Press 'b' to go back and choose a login option, or x to exit.")
 
                 next_step = chr(self.screen.getch())
 
@@ -259,10 +262,10 @@ try:
             self.screen.border(0)
             row = 4
             item_to_add = get_value("data/products.txt", prod_ID)
-            self.screen.addstr(row, 40, "how many" + item_to_add["name"] + "s would you like to add?")
+            self.screen.addstr(row, 22, "how many " + item_to_add["name"] + "s would you like to add?")
             # print("how many" + prod_id["name"] + "s would you like to add?")
             row += 1
-            self.screen.addstr(row, 40, "'b' to go back, 'x' to exit.")
+            self.screen.addstr(row, 22, "'b' to go back, 'x' to exit.")
             # print("'b' to go back, 'x' to exit.")
             # quantity = input(">> ")
             quantity = chr(self.screen.getch())
@@ -280,7 +283,7 @@ try:
                 finally:
                     add_item_to_cart("data/customers.txt", self.current_user, prod_ID, quantity)
                     row += 3
-                    self.screen.addstr(row, 40, str(quantity) + item_to_add["name"] + " added to cart.")
+                    self.screen.addstr(row, 40, str(quantity) + " " + item_to_add["name"] + " added to cart.")
                     row += 3
                     self.screen.addstr(row, 40, "Press 'any key' to return to shopping menu.")
 
@@ -332,23 +335,24 @@ try:
                 # self.screen.addstr out total amount due
                 self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
 
-        def convert_to_completed(payment_uid):
+        def convert_to_completed(self, payment_uid):
             # grab user name top-level variable.
             # generate a new order uid with that user name and the UID argument.
             # for each cart item, for qty number of times, generate a line item with the product number and order number.
             oid = new_order(self.current_user, payment_uid)
-            current_user_obj = get_value("data/users.txt", self.current_user)
+            current_user_obj = get_value("data/customers.txt", self.current_user)
             cart = current_user_obj.cart
 
             for prod_id, qty in cart.items():
                 while qty > 0:
                     generate_new_line_item('data/line_items.txt', oid, prod_id)
                     qty -= 1
-
+            delete_cart('data/customers.txt', self.current_user)
             self.logged_in_menu()
 
         def payment_options_menu(self, completing=False):
             self.screen.clear()
+            self.screen.addstr(3, 20, "your payment types:")
             self.screen.border(0)
             how_far_down = 4
             # pass user name top-level variable to generate_payment_list.
@@ -372,7 +376,7 @@ try:
                 next_step = chr(self.screen.getch())
                 if next_step == "n":
                     self.new_payment()
-                    self.payment_options_menu(completing)
+                    self.payment_options_menu(completing=completing)
                 elif next_step == "b":
                     self.logged_in_menu()
                 elif next_step == "x":
@@ -380,10 +384,13 @@ try:
                 else:
                     self.payment_options_menu()
             elif completing is True:
-                self.screen.addstr(how_far_down, 40, "press the number of the payment to use for this order. n to make a new payment. b to go back. x to exit.")
+                self.screen.addstr(how_far_down, 40, "press the number of the payment to use for this order.")
+                how_far_down += 1
+                self.screen.addstr(how_far_down, 40, "n to make a new payment. b to go back. x to exit.")
+                how_far_down += 1
                 next_step = chr(self.screen.getch())
                 if next_step == "n":
-                    self.payment_options_menu(False)
+                    self.payment_options_menu(completing=False)
                 elif next_step == "b":
                     self.shop_menu()
                 elif next_step == "x":
@@ -392,7 +399,7 @@ try:
                     try:
                         next_step = int(next_step)
                     except ValueError:
-                        self.payment_options_menu(True)
+                        self.payment_options_menu(completing=True)
                     finally:
                         if next_step in payment_options.keys():
                             self.convert_to_completed(payment_options[next_step])
