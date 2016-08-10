@@ -143,6 +143,40 @@ try:
                         print("command_not_recognized.")
                         self.shop_menu()
 
+        def view_cart():
+            """
+            Displays the content of the currently logged in user
+
+            Args- None
+            """
+            # get the user object of the currently logged in user
+            current_user_obj = get_value("data/users.txt", self.current_user)
+            # get that users cart
+            cart = current_user_obj.cart
+            # check if cart is not empty
+            if cart == {}:
+                print("Your cart is empty. Start shopping!")
+            else:
+                print("Your cart:")
+                print("*" * 44)
+                # format for columns
+                row_string = "{0:<18}{1:<11}${2:<14}"
+                total_string = "{0:<29}${1:<14}"
+                total_list = []
+                # loop over cart items and calculate total (grab price from 'products.txt')
+                for prod_id, qty in cart.items():
+                    product_obj = get_value("data/products.txt", prod_id)
+                    total = qty * product_obj["price"]
+                    # append total to list of totals (for amount due calculation)
+                    total_list.append(total)
+                    # limit product name
+                    product_name = product_obj.name
+                    product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
+                    print(row_string.format(product_name, qty, total))
+                print("*" * 44)
+                # print out total amount due
+                print(total_string.format("Total:", sum(total_list)))
+
         def convert_to_completed(payment_uid):
             # grab user name top-level variable.
             # generate a new order uid with that user name and the UID argument.
