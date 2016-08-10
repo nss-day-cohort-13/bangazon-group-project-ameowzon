@@ -8,7 +8,7 @@ class test_utility(unittest.TestCase):
         self.assertIsNone(get_value('data/test/test_order.txt', 'fake_uid'))
 
     def test_get_value_returns_class_object_when_found(self):
-        test_obj = get_value('data/test/test_order.txt', 'b91265d9-2dd1-4909-95db-bb2b4245d939')
+        test_obj = get_value('data/test/test_order.txt', '9a4618fa-88d3-43e2-8556-7de4295deef3')
         self.assertIsNotNone(test_obj)
         self.assertIsInstance(test_obj, Order)
 
@@ -27,11 +27,13 @@ class test_utility(unittest.TestCase):
         del lib[returned_oid]
         serialize('data/test/test_order.txt', lib)
 
+
 class test_product(unittest.TestCase):
 
     def test_generate_product_list(self):
         # list of all the products.
-        pass
+        self.assertIsInstance(generate_product_list("./data/products"), dict)
+        # need more tests
 
 
 class test_customer(unittest.TestCase):
@@ -117,12 +119,41 @@ class test_temp_cart(unittest.TestCase):
 class test_order(unittest.TestCase):
 
     def test_generate_new_order(self):
-        pass
+        # This test is almost exactly the same as 'test_add_new_item';
+        # It simply checks that the values passed through this generate order
+        # function create the order and add it to the order library as expected
+        cid = '123'
+        pid = '456'
+        returned_oid = new_order(cid, pid, 'data/test/test_order.txt')
 
-    def test_add_product_to_order(self):
-        # adding productID as key, quantity as value.
-        # please also test adding another of the same object to the order.
-        pass
+        cid_2 = '222'
+        pid_2 = '444'
+        second_oid = new_order(cid_2, pid_2, 'data/test/test_order.txt')
+
+        added_obj = get_value('data/test/test_order.txt', returned_oid)
+        self.assertIsInstance(added_obj, Order)
+        self.assertEqual(added_obj.customer_id, '123')
+        self.assertEqual(added_obj.payment, '456')
+
+        # Clean up (delete the item just added)
+        lib = deserialize('data/test/test_order.txt')
+        del lib[returned_oid]
+        del lib[second_oid]
+        serialize('data/test/test_order.txt', lib)
+
+    def test_build_temp_customer_orders_dict(self):
+        cid = '123'
+        pid = '456'
+        returned_oid = new_order(cid, pid, 'data/test/test_order.txt')
+
+        order_lib = build_order_dict('data/test/test_order.txt', '123')
+        check_lib = [(item.customer_id == '123') for key, item in order_lib.items()]
+        self.assertFalse(False in check_lib)
+
+        # Clean up (delete the item just added)
+        lib = deserialize('data/test/test_order.txt')
+        del lib[returned_oid]
+        serialize('data/test/test_order.txt', lib)
 
 
 class test_line_item(unittest.TestCase):

@@ -112,7 +112,9 @@ class Meow():
         pass
 
 if __name__ == '__main__':
-    # Meow().print_hey()
-    print_hello()
+    # generate_product_list("./data/products")
+    generate_customer_menu("./data/test/test_customer.txt")
+    # build_temp_product()
+    # load_temp_product()
 
     # objects are classes
