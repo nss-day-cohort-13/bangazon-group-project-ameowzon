@@ -213,7 +213,7 @@ try:
                 if next_step == "b":
                     self.unlogged_in_menu()
                 elif next_step == "x":
-                    self.quit_menu()
+                    self.quit_menu(self.shop_menu)
                 else:
                     print("command_not_recognized.")
                     self.shop_menu()
@@ -232,7 +232,7 @@ try:
             if next_step == "b":  # go back.
                 self.shop_menu()
             elif next_step == "x":  # exit.
-                self.quit_menu()
+                self.quit_menu(self.shop_menu)
             else:
                 try:  # add a qty of items to cart property on the current user object.
                     quantity = int(quantity)
