@@ -261,10 +261,10 @@ try:
             cart = current_user_obj.cart
             # check if cart is not empty
             if cart == {}:
-                print("Your cart is empty. Start shopping!")
+                self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
-                print("Your cart:")
-                print("*" * 44)
+                self.screen.addstr(12, 40, "Your cart:")
+                self.screen.addstr(13, 40, "*" * 44)
                 # format for columns
                 row_string = "{0:<18}{1:<11}${2:<14}"
                 total_string = "{0:<29}${1:<14}"
@@ -278,10 +278,10 @@ try:
                     # limit product name
                     product_name = product_obj.name
                     product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
-                    print(row_string.format(product_name, qty, total))
-                print("*" * 44)
-                # print out total amount due
-                print(total_string.format("Total:", sum(total_list)))
+                    self.screen.addstr(14, 40, row_string.format(product_name, qty, total))
+                self.screen.addstr(15, 40, "*" * 44)
+                # self.screen.addstr out total amount due
+                self.screen.addstr(16, 40, total_string.format("Total:", sum(total_list)))
 
         def convert_to_completed(payment_uid):
             # grab user name top-level variable.
