@@ -95,23 +95,53 @@ try:
             pass
 
         def shop_menu(self):
-            # are you logged in or not?
-            # if you are logged in:
-            # I THINK WE SHOULD HAVE THE CART REPORT BE SEPARATE.
-            # 1. for each item in your cart, get_value to print the name, per item price, quantity, total.
-            # 2. total up the line item totals to print a cart total. Do we want to separate out this into a separate function?
-            # 3. load_product_library and for each available product index, get_value to print the name and price.
-            # 4. also add an option for completing order.
-            # 4. request input for an item to add, or whether you'd ike to complete your order.
-            # if you'd like to add an item:
-            # 5. request input for the quantity to add.
-            # 6. pass the name and quantity to add_item_to_cart.
-            # if you'd like to complete your order:
-            # run payment_options_menu and pass completing=True so it asks the appropriate questions.
-            # if you are not logged in:
-            # load_product_library and for each available product index, get_value to print the name and price.
-            # request input to go back or exit.
-            pass 
+                """
+                This function prints a list of products and prices from products.txt, saved as a index-uid dictionary in a scoped product_menu variable.  Then it requests next_step input from the user. If the user is not logged in, the only subsequent options are to go back or exit. If the user is logged in, they have the option of adding an item to their cart (via product_menu) or completing their order via payment_options_menu.
+                ==========
+                Method Arguments: none.
+                """
+                # load_product_library and for each available product index, get_value to print the name and price.
+                product_menu = generate_product_list("data/products.txt")
+                for index, UID in product_menu.items():
+                    info = get_value("data/products.txt", UID)
+                    print("{0}. {1}-- ${2}".format(index, info["name"], info["price"]))
+                # are you logged in or not?
+                if self.current_user is not None:
+                    # view your cart or note that it's empty.
+                    self.view_cart()
+                    print("press the number of the item you'd like to add to your cart,\nOr press'c' to check out, 'b' to go back, 'x' to exit.")
+                    next_step = input("\n>>")
+                    if next_step == "x":  # Exit.
+                        print("goodbye.")
+                        exit()
+                    elif next_step == "b":  # Go back.
+                        self.logged_in_menu()
+                    elif next_step == "c":  # Check Out.
+                        self.payment_options_menu(True)
+                    else:
+                        print(next_step)
+                        try:  # Add a product to your cart.
+                            next_step = int(next_step)
+                        except ValueError:
+                            self.shop_menu()
+                        finally:
+                            if next_step in product_menu.keys():
+                                self.add_to_cart_menu(product_menu[next_step])
+                            else:
+                                print("command not recognized.")
+                                self.shop_menu()
+                else:
+                    # if you're not logged in you can view products, but you can't do anything with a cart.
+                    print("You are not logged in.\nPress 'b' to go back and choose a login option, or x to exit.")
+                    next_step = input("\n>> ")
+                    if next_step == "b":
+                        self.unlogged_in_menu()
+                    elif next_step == "x":
+                        print("goodbye.")
+                        exit()
+                    else:
+                        print("command_not_recognized.")
+                        self.shop_menu()
 
         def convert_to_completed(payment_uid):
             # grab user name top-level variable.
@@ -154,8 +184,3 @@ try:
 
 except KeyboardInterrupt:
     curses.endwin()
-
-    # generate_product_list("./data/products")
-    # generate_customer_menu("./data/test/test_customer.txt")
-    # build_temp_product()
-    # load_temp_product()
