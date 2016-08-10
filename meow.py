@@ -65,8 +65,12 @@ try:
             # print the logged-in menu options.
             # request input.
             # based on input, do:
+            customer_info = get_value("data/customers.txt", self.current_user)
+            name = customer_info.name
             self.screen.clear()
             self.screen.border(0)
+            self.screen.addstr(10, 40, "Welcome " + name + "!")
+            self.screen.addstr(11, 40, "")
             self.screen.addstr(12, 40, '1. Log out')
             self.screen.addstr(13, 40, '2. Shop')
             self.screen.addstr(14, 40, '3. Payment options')
@@ -350,17 +354,21 @@ try:
             # pass user name top-level variable to generate_payment_list.
             payment_options = generate_payments_menu("data/payments.txt", self.current_user)
             # for each payment id in payment_list, use get_value to print the name or something.
-            for index, uid in payment_options:
-                payment = get_value("data/payments.txt", uid)
-                self.screen.addstr(how_far_down, 40, index + ". " + payment["name"])
+            if payment_options == {}:
+                self.screen.addstr(how_far_down, 40, "no payment types yet!")
                 how_far_down += 1
+            else:
+                for index, uid in payment_options.items():
+                    payment = get_value("data/payments.txt", uid)
+                    self.screen.addstr(how_far_down, 40, str(index) + ". " + payment.name)
+                    how_far_down += 1
 
             self.screen.addstr(how_far_down, 40, '')
             how_far_down += 1
             self.screen.refresh()
 
             if completing is False:
-                self.screen.addstr(how_far_down, 40, "n for new payment. b to go back. x to exit.")
+                self.screen.addstr(how_far_down, 22, "n for new payment. b to go back. x to exit.")
                 next_step = chr(self.screen.getch())
                 if next_step == "n":
                     self.new_payment()
