@@ -15,9 +15,9 @@ from objects.product_object import *
 
 class Meow():
 
-    current_user = None
+    self.current_user = None
 
-    def unlogged_in_menu():
+    def unlogged_in_menu(self):
         # print the unlogged-in menu options.
         # request input
         # based on input, do:
@@ -28,40 +28,62 @@ class Meow():
         # 5. exit.
         pass
 
-    def logged_in_menu():
+    def logged_in_menu(self):
         # print the logged-in menu options.
         # request input.
         # based on input, do:
-        # 1. log out (reset_user)
-        # 2. shop(shop_menu)
-        # 3. payment options(payment_menu)
-        # 4. product report (generate_popularity_report)
-        # 5. view orders
-        # 6. exit.
-        pass
+        self.screen.clear()
+        self.screen.border(0)
+        self.screen.addstr(12, 40, '1. Log out')
+        self.screen.addstr(13, 40, '2. Shop')
+        self.screen.addstr(14, 40, '3. Payment options')
+        self.screen.addstr(15, 40, '4. Product report')
+        self.screen.addstr(16, 40, '5. Exit')
+        self.screen.refresh()
 
-    def user_menu():
+        try:
+            choice = int(chr(self.screen.getch()))
+
+            if choice == 1:
+                self.reset_user()
+
+            elif choice == 2:
+                self.shop_menu()
+
+            elif choice == 3:
+                self.payment_options_menu()
+
+            elif choice == 4:
+                self.generate_popularity_report()
+
+            elif choice == 5:
+                self.quit_menu()
+
+        except ValueError:
+            self.logged_in_menu()
+
+    def user_menu(self):
         # generate the customer menu.
         # for each customer item, use get_value to print the name value.
         # request input for which user.
         pass
 
-    def create_new_user():
+    def create_new_user(self):
         # request input for all the things.
         # pass all the input into the create_new_user.
         # set the current user to the UID that returns,
         # then print the logged in menu.
         pass
 
-    def set_user(user_id):
+    def set_user(self, user_id):
         # set user ID to current user.
         pass
 
-    def reset_user():
+    def reset_user(self):
         # set current user to none. that's it.
-        pass
+        current_user = None
 
-    def shop_menu():
+    def shop_menu(self):
         # are you logged in or not?
         # if you are logged in:
         # 1. load view_cart so all the math gets done.
@@ -78,19 +100,19 @@ class Meow():
         # request input to go back or exit.
         pass
 
-    def view_cart():
+    def view_cart(self):
         # 1. for each item in your cart, get_value to print the name, per item price, quantity, total.
         # 2. total up the line item totals to print a cart total. Do we want to separate out this into a separate function?
         pass
 
-    def convert_to_completed(payment_uid):
+    def convert_to_completed(self, payment_uid):
         # grab user name top-level variable.
         # generate a new order uid with that user name and the UID argument.
         # for each cart item, for qty number of times, generate a line item with the product number and order number.
         # return the order number.
         pass
 
-    def payment_options_menu(completing=False):
+    def payment_options_menu(self, completing=False):
         # pass user name top-level variable to generate_payment_list.
         # for each payment id in payment_list, use get_value to print the name or something.
         # if completing == false
@@ -106,7 +128,7 @@ class Meow():
         # print the order number, and print the top level logged-in menu.
         pass
 
-    def generate_popularity_report():
+    def generate_popularity_report(self):
         pass
 
 if __name__ == '__main__':
