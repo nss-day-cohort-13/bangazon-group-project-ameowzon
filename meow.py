@@ -171,7 +171,7 @@ try:
 
         def shop_menu(self):
             """
-            This function prints a list of products and prices from products.txt, saved as a index-uid dictionary in a scoped product_menu variable.  Then it requests next_step input from the user. If the user is not logged in, the only subsequent options are to go back or exit. If the user is logged in, they have the option of adding an item to their cart (via product_menu) or completing their order via payment_options_menu.
+            Prints a list of products and prices from products.txt, saved as a index-uid dictionary in a scoped product_menu variable.  Then it requests next_step input from the user. If the user is not logged in, the only subsequent options are to go back or exit. If the user is logged in, they have the option of adding an item to their cart (via product_menu) or completing their order via payment_options_menu.
             ==========
             Method Arguments: none.
             """
@@ -198,6 +198,7 @@ try:
                     try:  # Add a product to your cart.
                         next_step = int(next_step)
                     except ValueError:
+                        print("command not recognized.")
                         self.shop_menu()
                     finally:
                         if next_step in product_menu.keys():
@@ -212,10 +213,35 @@ try:
                 if next_step == "b":
                     self.unlogged_in_menu()
                 elif next_step == "x":
-                    print("goodbye.")
-                    exit()
+                    self.quit_menu(self.shop_menu)
                 else:
                     print("command_not_recognized.")
+                    self.shop_menu()
+
+        def add_to_cart_menu(self, prod_ID):
+            """
+            Receives a unique id for a product to add to the current user's 'cart' property. To separate concerns from shop_menu, this function requests the quantity to add, and adds the item to the cart.
+            ==========
+            Arguments: the string unique ID of one of the products in products.txt.
+            """
+            item_to_add = get_value("data/products.txt", prod_id)
+            print("how many" + prod_id["name"] + "s would you like to add?")
+            print("'b' to go back, 'x' to exit.")
+            quantity = input(">> ")
+
+            if quantity == "b":  # go back.
+                self.shop_menu()
+            elif quantity == "x":  # exit.
+                self.quit_menu(self.shop_menu)
+            else:
+                try:  # add a qty of items to cart property on the current user object.
+                    quantity = int(quantity)
+                except ValueError:
+                    print("command not recognized.")
+                    self.add_to_cart_menu(prod_ID)
+                finally:
+                    add_item_to_cart("data/customers.txt", self.current_user, prod_ID, quantity)
+                    print(quantity + item_to_add["name"] + " added to cart.")
                     self.shop_menu()
 
         def view_cart():
@@ -273,13 +299,6 @@ try:
             # if they select a current payment:
             # pass the payment uid to convert to completed.
             # print the order number, and print the top level logged-in menu.
-            pass
-
-        def view_orders(self):
-            # THIS IS A BITCH. DO IT LATER.
-            # pass user_name top_level variable to generate_order_list.
-            # for each order, print the order ID then pass it into view_line_items(?)
-            # use get_value to print all the order stuff.
             pass
 
         def generate_popularity_report(self):
