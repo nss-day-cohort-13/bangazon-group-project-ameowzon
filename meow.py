@@ -41,8 +41,8 @@ class Meow():
         pass
 
     def user_menu():
-        # generate the user index.
-        # for each index, use get_value to print the name value.
+        # generate the customer menu.
+        # for each customer item, use get_value to print the name value.
         # request input for which user.
         pass
 
@@ -64,11 +64,9 @@ class Meow():
     def shop_menu():
         # are you logged in or not?
         # if you are logged in:
-        # I THINK WE SHOULD HAVE THE CART REPORT BE SEPARATE.
-        # 1. for each item in your cart, get_value to print the name, per item price, quantity, total.
-        # 2. total up the line item totals to print a cart total. Do we want to separate out this into a separate function?
-        # 3. load_product_library and for each available product index, get_value to print the name and price.
-        # 4. also add an option for completing order.
+        # 1. load view_cart so all the math gets done.
+        # 2. load_product_library and for each available product index, get_value to print the name and price.
+        # 3. also add an option for completing order.
         # 4. request input for an item to add, or whether you'd ike to complete your order.
         # if you'd like to add an item:
         # 5. request input for the quantity to add.
@@ -78,6 +76,12 @@ class Meow():
         # if you are not logged in:
         # load_product_library and for each available product index, get_value to print the name and price.
         # request input to go back or exit.
+        pass
+
+
+    def view_cart():
+        # 1. for each item in your cart, get_value to print the name, per item price, quantity, total.
+        # 2. total up the line item totals to print a cart total. Do we want to separate out this into a separate function?
         pass
 
     def convert_to_completed(payment_uid):
@@ -101,6 +105,7 @@ class Meow():
         # if they select a current payment:
         # pass the payment uid to convert to completed.
         # print the order number, and print the top level logged-in menu.
+<<<<<<< Updated upstream
         pass
 
     def view_orders():
@@ -108,6 +113,8 @@ class Meow():
         # pass user_name top_level variable to generate_order_list.
         # for each order, print the order ID then pass it into view_line_items(?)
         # use get_value to print all the order stuff.
+=======
+>>>>>>> Stashed changes
         pass
 
     def generate_popularity_report():
