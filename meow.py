@@ -78,7 +78,6 @@ class Meow():
         # request input to go back or exit.
         pass
 
-
     def view_cart():
         # 1. for each item in your cart, get_value to print the name, per item price, quantity, total.
         # 2. total up the line item totals to print a cart total. Do we want to separate out this into a separate function?
@@ -105,16 +104,6 @@ class Meow():
         # if they select a current payment:
         # pass the payment uid to convert to completed.
         # print the order number, and print the top level logged-in menu.
-<<<<<<< Updated upstream
-        pass
-
-    def view_orders():
-        # THIS IS A BITCH. DO IT LATER.
-        # pass user_name top_level variable to generate_order_list.
-        # for each order, print the order ID then pass it into view_line_items(?)
-        # use get_value to print all the order stuff.
-=======
->>>>>>> Stashed changes
         pass
 
     def generate_popularity_report():
