@@ -158,13 +158,15 @@ class test_order(unittest.TestCase):
 
 class test_line_item(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(self):
+        self.line_id = generate_new_line_item("data/test/test_line_item.txt", 1234, 5678)
+        self.line_obj = get_value("data/test/test_line_item.txt", self.line_id)
+
     def test_generate_new_line_item(self):
-        pass
-
-    def test_generate_line_items_view(self):
-        # get a dictionary of ALL the line items, for the report. key: line item UID. value: {order id: **, product id: **}
-        pass
-
+        self.assertIsInstance(self.line_obj, Line_Item_Object)
+        self.assertEqual(self.line_obj.order_id, 1234)
+        self.assertEqual(self.line_obj.product_id, 5678)
 
 class test_meow(unittest.TestCase):
 
