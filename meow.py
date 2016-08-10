@@ -78,6 +78,7 @@ class Meow():
         # if you are not logged in:
         # load_product_library and for each available product index, get_value to print the name and price.
         # request input to go back or exit.
+        pass
 
     def convert_to_completed(payment_uid):
         # grab user name top-level variable.
@@ -100,6 +101,7 @@ class Meow():
         # if they select a current payment:
         # pass the payment uid to convert to completed.
         # print the order number, and print the top level logged-in menu.
+        pass
 
     def view_orders():
         # THIS IS A BITCH. DO IT LATER.
