@@ -229,9 +229,9 @@ try:
             print("'b' to go back, 'x' to exit.")
             quantity = input(">> ")
 
-            if next_step == "b":  # go back.
+            if quantity == "b":  # go back.
                 self.shop_menu()
-            elif next_step == "x":  # exit.
+            elif quantity == "x":  # exit.
                 self.quit_menu(self.shop_menu)
             else:
                 try:  # add a qty of items to cart property on the current user object.
