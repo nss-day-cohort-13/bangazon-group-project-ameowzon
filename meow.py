@@ -287,7 +287,6 @@ try:
             # grab user name top-level variable.
             # generate a new order uid with that user name and the UID argument.
             # for each cart item, for qty number of times, generate a line item with the product number and order number.
-            # return the order number.
             oid = new_order(self.current_user, payment_uid)
             current_user_obj = get_value("data/users.txt", self.current_user)
             cart = current_user_obj.cart
