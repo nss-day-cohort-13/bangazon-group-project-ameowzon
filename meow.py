@@ -308,7 +308,7 @@ try:
 
             if completing is False:
                 self.screen.addstr(how_far_down, 40, "n for new payment. b to go back. x to exit.")
-                next_step = get_param(">> ", self.screen)
+                next_step = chr(self.screen.getch())
                 if next_step == "n":
                     self.new_payment()
                     self.payment_options_menu(completing)
@@ -320,7 +320,7 @@ try:
                     self.payment_options_menu()
             elif completing is True:
                 self.screen.addstr(how_far_down, 40, "press the number of the payment to use for this order. n to make a new payment. b to go back. x to exit.")
-                next_step = get_param(">>", self.screen)
+                next_step = chr(self.screen.getch())
                 if next_step == "n":
                     self.payment_options_menu(False)
                 elif next_step == "b":
