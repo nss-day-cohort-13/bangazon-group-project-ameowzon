@@ -249,14 +249,14 @@ try:
                     print(quantity + item_to_add["name"] + " added to cart.")
                     self.shop_menu()
 
-        def view_cart():
+        def view_cart(self):
             """
             Displays the content of the currently logged in user
 
             Args- None
             """
             # get the user object of the currently logged in user
-            current_user_obj = get_value("data/users.txt", self.current_user)
+            current_user_obj = get_value("data/customers.txt", self.current_user)
             # get that users cart
             cart = current_user_obj.cart
             # check if cart is not empty
