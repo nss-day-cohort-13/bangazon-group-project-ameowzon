@@ -254,8 +254,8 @@ try:
             self.screen.clear()
             self.screen.border(0)
             row = 4
-            item_to_add = get_value("data/products.txt", prod_id)
-            self.screen.addstr(row, 40, "how many" + prod_id["name"] + "s would you like to add?")
+            item_to_add = get_value("data/products.txt", prod_ID)
+            self.screen.addstr(row, 40, "how many" + item_to_add["name"] + "s would you like to add?")
             # print("how many" + prod_id["name"] + "s would you like to add?")
             row += 1
             self.screen.addstr(row, 40, "'b' to go back, 'x' to exit.")
@@ -276,7 +276,7 @@ try:
                 finally:
                     add_item_to_cart("data/customers.txt", self.current_user, prod_ID, quantity)
                     row += 3
-                    self.screen.addstr(row, 40, quantity + item_to_add["name"] + " added to cart.")
+                    self.screen.addstr(row, 40, str(quantity) + item_to_add["name"] + " added to cart.")
                     row += 3
                     self.screen.addstr(row, 40, "Press 'any key' to return to shopping menu.")
 
@@ -302,25 +302,31 @@ try:
             if cart == {}:
                 self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
-                self.screen.addstr(12, 40, "Your cart:")
-                self.screen.addstr(13, 40, "*" * 44)
                 # format for columns
                 row_string = "{0:<18}{1:<11}${2:<14}"
                 total_string = "{0:<29}${1:<14}"
+                heading_string = "{0:<29}{1:<14}"
                 total_list = []
+                row = 18
+                self.screen.addstr(row, 40, heading_string.format("Your cart:", "Totals:"))
+                row += 1
+                self.screen.addstr(row, 40, "*" * 44)
+                row += 1
                 # loop over cart items and calculate total (grab price from 'products.txt')
                 for prod_id, qty in cart.items():
-                    product_obj = get_value("data/products.txt", prod_id)
-                    total = qty * product_obj["price"]
+                    product_dict = get_value("data/products.txt", prod_id)
+                    total = qty * product_dict["price"]
                     # append total to list of totals (for amount due calculation)
                     total_list.append(total)
                     # limit product name
-                    product_name = product_obj.name
+                    product_name = product_dict["name"]
                     product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
-                    self.screen.addstr(14, 40, row_string.format(product_name, qty, total))
-                self.screen.addstr(15, 40, "*" * 44)
+                    self.screen.addstr(row, 40, row_string.format(product_name, qty, total))
+                    row += 1
+                self.screen.addstr(row, 40, "*" * 44)
+                row += 1
                 # self.screen.addstr out total amount due
-                self.screen.addstr(16, 40, total_string.format("Total:", sum(total_list)))
+                self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
 
 
         def convert_to_completed(payment_uid):
