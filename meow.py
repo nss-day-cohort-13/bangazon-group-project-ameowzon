@@ -147,7 +147,19 @@ try:
             # pass all the input into the create_new_user.
             # set the current user to the UID that returns,
             # then print the logged in menu.
-            pass
+            name = get_param('What is your name?')
+            address = get_param('What is your street address?')
+            city = get_param('What city do you live in?')
+            state = get_param('What state do you live in?')
+            zipcode = get_param('What is your zipcode?')
+            phone = get_param('What is your phone number?')
+
+            try:
+                new_uid = generate_new_customer('data/customers.txt', name, address, city, state, zipcode, phone)
+                self.set_user(new_uid)
+                self.logged_in_menu()
+            except:
+                self.unlogged_in_menu()
 
         def set_user(user_id):
             # set user ID to current user.
