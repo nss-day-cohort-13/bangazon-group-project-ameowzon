@@ -339,8 +339,12 @@ try:
                             self.payment_options_menu(True)
 
         def new_payment(self):
-            account_num = input("enter the account number.\n>> ")
-            account_name = input("enter a nickname for this account.\n>> ")
+            self.screen.clear()
+            self.screen.border(0)
+            self.screen.addstr(12, 40, 'Add a new account:')
+            self.screen.refresh()
+            account_num = get_param("enter the account number.", self.screen)
+            account_name = get_param("enter a nickname for this account.", self.screen)
             generate_new_payment("data/payments.txt", account_name, account_num, self.current_user)
 
         def generate_popularity_report(self):
