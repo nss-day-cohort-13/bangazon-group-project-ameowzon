@@ -1,4 +1,6 @@
 
 class Line_Item_Object():
 
-    pass
+    def __init__(self, order_id, product_id):
+    	self.order_id = order_id
+    	self.product_id = product_id

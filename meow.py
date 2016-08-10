@@ -65,34 +65,109 @@ try:
             # print the logged-in menu options.
             # request input.
             # based on input, do:
-            # 1. log out (reset_user)
-            # 2. shop(shop_menu)
-            # 3. payment options(payment_menu)
-            # 4. product report (generate_popularity_report)
-            # 5. view orders
-            # 6. exit.
-            pass
+            self.screen.clear()
+            self.screen.border(0)
+            self.screen.addstr(12, 40, '1. Log out')
+            self.screen.addstr(13, 40, '2. Shop')
+            self.screen.addstr(14, 40, '3. Payment options')
+            self.screen.addstr(15, 40, '4. Product report')
+            self.screen.addstr(16, 40, '5. Exit')
+            self.screen.refresh()
+
+            try:
+                choice = int(chr(self.screen.getch()))
+
+                if choice == 1:
+                    self.reset_user()
+
+                elif choice == 2:
+                    self.shop_menu()
+
+                elif choice == 3:
+                    self.payment_options_menu()
+
+                elif choice == 4:
+                    self.generate_popularity_report()
+
+                elif choice == 5:
+                    self.quit_menu(self.logged_in_menu)
+
+            except ValueError:
+                self.logged_in_menu()
+
+        def quit_menu(self, back_to_menu):
+            self.screen.clear()
+            self.screen.border(0)
+            self.screen.addstr(12, 40, 'Are you sure you want to exit? [ y / n ]')
+            self.screen.refresh()
+
+            try:
+                choice = chr(self.screen.getch())
+
+                if choice.lower() == 'y':
+                    quit()
+                else:
+                    if self.current_user == None:
+                        self.unlogged_in_menu()
+                    else:
+                        back_to_menu()
+
+            except ValueError:
+                back_to_menu()
 
         def user_menu(self):
-            # generate the user index. (generate_customer )
-            # for each index, use get_value to print the name value.
+            # generate the customer menu.
+            # for each customer item, use get_value to print the name value.
             # request input for which user.
-            pass
+            user_lib = generate_customer_menu()
+
+            self.screen.clear()
+            self.screen.border(0)
+
+            row = 12
+            for index, user_id in user_lib.items():
+                user = get_value('data/customers.txt', user_id)
+                self.screen.addstr(row, 40, user.name)
+                row += 1
+            self.screen.refresh()
+
+            try:
+                choice = int(chr(self.screen.getch()))
+                set_user(user_lib[choice])
+                self.logged_in_menu()
+
+            except ValueError:
+                self.user_menu()
+
+            except IndexError:
+                self.user_menu()
 
         def create_new_user(self):
             # request input for all the things.
             # pass all the input into the create_new_user.
             # set the current user to the UID that returns,
             # then print the logged in menu.
-            pass
+            name = get_param('What is your name?')
+            address = get_param('What is your street address?')
+            city = get_param('What city do you live in?')
+            state = get_param('What state do you live in?')
+            zipcode = get_param('What is your zipcode?')
+            phone = get_param('What is your phone number?')
+
+            try:
+                new_uid = generate_new_customer('data/customers.txt', name, address, city, state, zipcode, phone)
+                self.set_user(new_uid)
+                self.logged_in_menu()
+            except:
+                self.unlogged_in_menu()
 
         def set_user(user_id):
             # set user ID to current user.
-            pass
+            self.current_user = user_id
 
         def reset_user(self):
             # set current user to none. that's it.
-            pass
+            self.current_user = None
 
         def shop_menu(self):
             """
@@ -168,6 +243,40 @@ try:
                     add_item_to_cart("data/customers.txt", self.current_user, prod_ID, quantity)
                     print(quantity + item_to_add["name"] + " added to cart.")
                     self.shop_menu()
+
+        def view_cart():
+            """
+            Displays the content of the currently logged in user
+
+            Args- None
+            """
+            # get the user object of the currently logged in user
+            current_user_obj = get_value("data/users.txt", self.current_user)
+            # get that users cart
+            cart = current_user_obj.cart
+            # check if cart is not empty
+            if cart == {}:
+                print("Your cart is empty. Start shopping!")
+            else:
+                print("Your cart:")
+                print("*" * 44)
+                # format for columns
+                row_string = "{0:<18}{1:<11}${2:<14}"
+                total_string = "{0:<29}${1:<14}"
+                total_list = []
+                # loop over cart items and calculate total (grab price from 'products.txt')
+                for prod_id, qty in cart.items():
+                    product_obj = get_value("data/products.txt", prod_id)
+                    total = qty * product_obj["price"]
+                    # append total to list of totals (for amount due calculation)
+                    total_list.append(total)
+                    # limit product name
+                    product_name = product_obj.name
+                    product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
+                    print(row_string.format(product_name, qty, total))
+                print("*" * 44)
+                # print out total amount due
+                print(total_string.format("Total:", sum(total_list)))
 
         def convert_to_completed(payment_uid):
             # grab user name top-level variable.
