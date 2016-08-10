@@ -288,7 +288,16 @@ try:
             # generate a new order uid with that user name and the UID argument.
             # for each cart item, for qty number of times, generate a line item with the product number and order number.
             # return the order number.
-            pass
+            oid = new_order(self.current_user, payment_uid)
+            current_user_obj = get_value("data/users.txt", self.current_user)
+            cart = current_user_obj.cart
+
+            for prod_id, qty in cart.items():
+                while qty > 0:
+                    generate_new_line_item('data/line_items.txt', oid, prod_id)
+                    qty -= 1
+
+            self.logged_in_menu()
 
         def payment_options_menu(completing=False):
             # pass user name top-level variable to generate_payment_list.
