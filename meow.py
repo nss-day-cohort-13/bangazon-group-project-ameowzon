@@ -232,7 +232,7 @@ try:
             item_to_add = get_value("data/products.txt", prod_id)
             print("how many" + prod_id["name"] + "s would you like to add?")
             print("'b' to go back, 'x' to exit.")
-            quantity = input(">> ")
+            quantity = get_param(">> ", self.screen)
 
             if quantity == "b":  # go back.
                 self.shop_menu()
@@ -291,14 +291,23 @@ try:
             pass
 
         def payment_options_menu(self, completing=False):
+            self.screen.clear()
+            self.screen.border(0)
+            how_far_down = 12
             # pass user name top-level variable to generate_payment_list.
             payment_options = generate_payments_menu("data/payments.txt", self.current_user)
             # for each payment id in payment_list, use get_value to print the name or something.
             for index, uid in payment_options:
                 payment = get_value("data/payments.txt", uid)
-                print(index + ". " + payment["name"])
+                self.screen.addstr(how_far_down, 40, index + ". " + payment["name"])
+                how_far_down += 1
+
+            self.screen.addstr(how_far_down, 40, '')
+            how_far_down += 1
+            self.screen.refresh()
+
             if completing is False:
-                print("n for new payment. b to go back. x to exit.")
+                self.screen.addstr(how_far_down, 40, "n for new payment. b to go back. x to exit.")
                 next_step = get_param(">> ", self.screen)
                 if next_step == "n":
                     self.new_payment()
@@ -310,7 +319,7 @@ try:
                 else:
                     self.payment_options_menu()
             elif completing is True:
-                print("press the number of the payment to use for this order. n to make a new payment. b to go back. x to exit.")
+                self.screen.addstr(how_far_down, 40, "press the number of the payment to use for this order. n to make a new payment. b to go back. x to exit.")
                 next_step = get_param(">>", self.screen)
                 if next_step == "n":
                     self.payment_options_menu(False)
@@ -326,7 +335,6 @@ try:
                     finally:
                         if next_step in payment_options.keys():
                             self.convert_to_completed(payment_options[next_step])
-                            self.logged_in_menu()
                         else:
                             self.payment_options_menu(True)
 
