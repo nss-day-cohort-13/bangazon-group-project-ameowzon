@@ -328,7 +328,6 @@ try:
                 # self.screen.addstr out total amount due
                 self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
 
-
         def convert_to_completed(payment_uid):
             # grab user name top-level variable.
             # generate a new order uid with that user name and the UID argument.
@@ -344,21 +343,62 @@ try:
 
             self.logged_in_menu()
 
-        def payment_options_menu(completing=False):
+        def payment_options_menu(self, completing=False):
+            self.screen.clear()
+            self.screen.border(0)
+            how_far_down = 4
             # pass user name top-level variable to generate_payment_list.
+            payment_options = generate_payments_menu("data/payments.txt", self.current_user)
             # for each payment id in payment_list, use get_value to print the name or something.
-            # if completing == false
-            # request input to either add a new payment or go back.
-            # if they'd like to add a new payment, request input for all the data,
-            # then pass it to generate_new_payment and restart the function.
-            # if completing == true
-            # request input to either add a new payment or select a current payment.
-            # if they'd like to add a new payment, request input for all the data,
-            # then pass it to generate_new_payment and restart the function to print the updated list of payments.
-            # if they select a current payment:
-            # pass the payment uid to convert to completed.
-            # print the order number, and print the top level logged-in menu.
-            pass
+            for index, uid in payment_options:
+                payment = get_value("data/payments.txt", uid)
+                self.screen.addstr(how_far_down, 40, index + ". " + payment["name"])
+                how_far_down += 1
+
+            self.screen.addstr(how_far_down, 40, '')
+            how_far_down += 1
+            self.screen.refresh()
+
+            if completing is False:
+                self.screen.addstr(how_far_down, 40, "n for new payment. b to go back. x to exit.")
+                next_step = chr(self.screen.getch())
+                if next_step == "n":
+                    self.new_payment()
+                    self.payment_options_menu(completing)
+                elif next_step == "b":
+                    self.logged_in_menu()
+                elif next_step == "x":
+                    self.quit_menu(self.payment_options_menu)
+                else:
+                    self.payment_options_menu()
+            elif completing is True:
+                self.screen.addstr(how_far_down, 40, "press the number of the payment to use for this order. n to make a new payment. b to go back. x to exit.")
+                next_step = chr(self.screen.getch())
+                if next_step == "n":
+                    self.payment_options_menu(False)
+                elif next_step == "b":
+                    self.shop_menu()
+                elif next_step == "x":
+                    self.quit_menu(self.shop_menu)
+                else:
+                    try:
+                        next_step = int(next_step)
+                    except ValueError:
+                        self.payment_options_menu(True)
+                    finally:
+                        if next_step in payment_options.keys():
+                            self.convert_to_completed(payment_options[next_step])
+                        else:
+                            self.payment_options_menu(True)
+
+        def new_payment(self):
+            self.screen.clear()
+            self.screen.border(0)
+            self.screen.addstr(12, 40, 'Add a new account:')
+            self.screen.refresh()
+            account_num = get_param("enter the account number.", self.screen)
+            account_name = get_param("enter a nickname for this account.", self.screen)
+            generate_new_payment("data/payments.txt", account_name, account_num, self.current_user)
 
         def generate_popularity_report(self):
             pass
