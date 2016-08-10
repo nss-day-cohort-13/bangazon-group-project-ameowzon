@@ -15,6 +15,24 @@ def read_json_file(input_file):
         return None
 
 
+def get_param(prompt_string, screen):
+    """ Helper function for working with curses. Clears screen, sets border to 0
+        creates a popup that displays the text of the prompt string passed in and
+        captures and returns the input to the calling function. Returns a string.
+        ==============
+        prompt_string - text the user wants displayed on the screen.
+    """
+    screen.clear()
+    screen.border(0)
+    screen.addstr(12, 40, prompt_string)
+    screen.refresh()
+    input = bytes.decode(screen.getstr(15, 40, 60))
+
+    # self.screen.addstr(17, 40, "input = {0}".format(input))
+    # pause = self.screen.getch()
+    return input
+
+
 def generate_uid():
     """ Returns a uuid to be used for a dictionary key.
         ===============

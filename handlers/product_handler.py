@@ -1,4 +1,3 @@
-from objects.product_object import *
 from utility.utility import *
 
 
