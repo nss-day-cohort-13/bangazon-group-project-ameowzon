@@ -62,6 +62,24 @@ class Meow():
         except ValueError:
             self.logged_in_menu()
 
+    def quit_menu(self):
+        self.screen.clear()
+        self.screen.border(0)
+        self.screen.addstr(12, 40, 'Are you sure you want to exit? [ y / n ]')
+        self.screen.refresh()
+
+        try:
+            choice = chr(self.screen.getch())
+
+            if choice.lower() == 'y':
+                quit()
+            else:
+                self.logged_in_menu()
+
+        except ValueError:
+            self.logged_in_menu()
+
+
     def user_menu(self):
         # generate the customer menu.
         # for each customer item, use get_value to print the name value.
