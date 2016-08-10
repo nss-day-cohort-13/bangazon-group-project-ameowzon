@@ -35,6 +35,7 @@ try:
             self.screen.addstr(14, 40, "3. View available products")
             self.screen.addstr(15, 40, "4. Generate report")
             self.screen.addstr(16, 40, "5. Exit")
+            self.screen.addstr(18, 40, '')
             self.screen.refresh()
 
             try:
@@ -53,8 +54,7 @@ try:
                     self.generate_popularity_report()
 
                 elif (choice == 5):  # Exit
-                    curses.endwin()
-                    exit()
+                    self.quit_menu(self.unlogged_in_menu)
                 else:
                     self.unlogged_in_menu()
 
@@ -72,6 +72,7 @@ try:
             self.screen.addstr(14, 40, '3. Payment options')
             self.screen.addstr(15, 40, '4. Product report')
             self.screen.addstr(16, 40, '5. Exit')
+            self.screen.addstr(18, 40, '')
             self.screen.refresh()
 
             try:
@@ -79,6 +80,7 @@ try:
 
                 if choice == 1:
                     self.reset_user()
+                    self.unlogged_in_menu()
 
                 elif choice == 2:
                     self.shop_menu()
@@ -99,12 +101,14 @@ try:
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(12, 40, 'Are you sure you want to exit? [ y / n ]')
+            self.screen.addstr(14, 40, '')
             self.screen.refresh()
 
             try:
                 choice = chr(self.screen.getch())
 
                 if choice.lower() == 'y':
+                    curses.endwin()
                     quit()
                 else:
                     if self.current_user == None:
@@ -119,7 +123,7 @@ try:
             # generate the customer menu.
             # for each customer item, use get_value to print the name value.
             # request input for which user.
-            user_lib = generate_customer_menu()
+            user_lib = generate_customer_menu('data/customers.txt')
 
             self.screen.clear()
             self.screen.border(0)
@@ -127,13 +131,14 @@ try:
             row = 12
             for index, user_id in user_lib.items():
                 user = get_value('data/customers.txt', user_id)
-                self.screen.addstr(row, 40, user.name)
+                self.screen.addstr(row, 40, '{0}. {1}'.format(index, user.name))
                 row += 1
+            self.screen.addstr((row + 1), 40, '')
             self.screen.refresh()
 
             try:
                 choice = int(chr(self.screen.getch()))
-                set_user(user_lib[choice])
+                self.set_user(user_lib[choice])
                 self.logged_in_menu()
 
             except ValueError:
@@ -147,12 +152,12 @@ try:
             # pass all the input into the create_new_user.
             # set the current user to the UID that returns,
             # then print the logged in menu.
-            name = get_param('What is your name?')
-            address = get_param('What is your street address?')
-            city = get_param('What city do you live in?')
-            state = get_param('What state do you live in?')
-            zipcode = get_param('What is your zipcode?')
-            phone = get_param('What is your phone number?')
+            name = get_param('What is your name?', self.screen)
+            address = get_param('What is your street address?', self.screen)
+            city = get_param('What city do you live in?', self.screen)
+            state = get_param('What state do you live in?', self.screen)
+            zipcode = get_param('What is your zipcode?', self.screen)
+            phone = get_param('What is your phone number?', self.screen)
 
             try:
                 new_uid = generate_new_customer('data/customers.txt', name, address, city, state, zipcode, phone)
@@ -161,7 +166,7 @@ try:
             except:
                 self.unlogged_in_menu()
 
-        def set_user(user_id):
+        def set_user(self, user_id):
             # set user ID to current user.
             self.current_user = user_id
 
