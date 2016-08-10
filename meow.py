@@ -293,7 +293,7 @@ try:
         def payment_options_menu(self, completing=False):
             self.screen.clear()
             self.screen.border(0)
-            how_far_down = 12
+            how_far_down = 4
             # pass user name top-level variable to generate_payment_list.
             payment_options = generate_payments_menu("data/payments.txt", self.current_user)
             # for each payment id in payment_list, use get_value to print the name or something.
