@@ -74,7 +74,10 @@ class Meow():
             if choice.lower() == 'y':
                 quit()
             else:
-                self.logged_in_menu()
+                if self.current_user == None:
+                    self.unlogged_in_menu()
+                else:
+                    self.logged_in_menu()
 
         except ValueError:
             self.logged_in_menu()
@@ -84,7 +87,28 @@ class Meow():
         # generate the customer menu.
         # for each customer item, use get_value to print the name value.
         # request input for which user.
-        pass
+        user_lib = generate_customer_menu()
+
+        self.screen.clear()
+        self.screen.border(0)
+
+        row = 12
+        for index, user_id in user_lib.items():
+            user = get_value('data/customers.txt', user_id)
+            self.screen.addstr(row, 40, user.name)
+            row += 1
+        self.screen.refresh()
+
+        try:
+            choice = int(chr(self.screen.getch()))
+            set_user(user_lib[choice])
+            self.logged_in_menu()
+
+        except ValueError:
+            self.user_menu()
+
+        except IndexError:
+            self.user_menu()
 
     def create_new_user(self):
         # request input for all the things.
@@ -94,12 +118,11 @@ class Meow():
         pass
 
     def set_user(self, user_id):
-        # set user ID to current user.
-        pass
+        self.current_user = user_id
 
     def reset_user(self):
         # set current user to none. that's it.
-        current_user = None
+        self.current_user = None
 
     def shop_menu(self):
         # are you logged in or not?
