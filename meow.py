@@ -147,12 +147,12 @@ try:
             # pass all the input into the create_new_user.
             # set the current user to the UID that returns,
             # then print the logged in menu.
-            name = get_param('What is your name?')
-            address = get_param('What is your street address?')
-            city = get_param('What city do you live in?')
-            state = get_param('What state do you live in?')
-            zipcode = get_param('What is your zipcode?')
-            phone = get_param('What is your phone number?')
+            name = get_param('What is your name?', self.screen)
+            address = get_param('What is your street address?', self.screen)
+            city = get_param('What city do you live in?', self.screen)
+            state = get_param('What state do you live in?', self.screen)
+            zipcode = get_param('What is your zipcode?', self.screen)
+            phone = get_param('What is your phone number?', self.screen)
 
             try:
                 new_uid = generate_new_customer('data/customers.txt', name, address, city, state, zipcode, phone)
