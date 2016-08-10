@@ -203,8 +203,7 @@ try:
                     next_step = chr(self.screen.getch())
                     row += 1
                     if next_step == "x":  # Exit.
-                        curses.endwin()
-                        exit()
+                        self.quit_menu(self.shop_menu)
 
                     elif next_step == "b":  # Go back.
                         self.logged_in_menu()
@@ -241,8 +240,7 @@ try:
                 if next_step == "b":
                     self.unlogged_in_menu()
                 elif next_step == "x":
-                    curses.endwin()
-                    exit()
+                    self.quit_menu(self.shop_menu)
                 else:
                     self.screen.addstr(17, 40, "Command_not_recognized.")
                     # print("command_not_recognized.")
