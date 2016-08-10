@@ -18,8 +18,8 @@ try:
         def __init__(self):
             # init curses
             self.screen = curses.initscr()
-
             self.current_user = None
+            self.unlogged_in_menu()
 
         def unlogged_in_menu(self):
 
@@ -149,7 +149,8 @@ try:
     if __name__ == '__main__':
         # Meow().print_hey()
         # print_hello()
-        Meow().unlogged_in_menu()
+        # Meow().unlogged_in_menu()
+        Meow()
 
 except KeyboardInterrupt:
     curses.endwin()
