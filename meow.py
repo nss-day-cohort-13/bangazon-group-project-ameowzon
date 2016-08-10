@@ -192,23 +192,18 @@ try:
                 self.screen.border(0)
                 self.screen.addstr(row, 40, "{0}. {1}-- ${2}".format(index, info["name"], info["price"]))
                 row += 1
-                # print("{0}. {1}-- ${2}".format(index, info["name"], info["price"]))
-            # self.screen.refresh()
             # are you logged in or not?
             row += 2
             if self.current_user is not None:
                 # view your cart or note that it's empty.
                 self.view_cart()
                 self.screen.addstr(row, 40, "Press the number of the item you'd like to add to your cart,\nOr press'c' to check out, 'b' to go back, 'x' to exit.")
-                # print("press the number of the item you'd like to add to your cart,\nOr press'c' to check out, 'b' to go back, 'x' to exit.")
-                # self.screen.refresh()
+
                 try:
                     next_step = chr(self.screen.getch())
-                # next_step = input("\n>>")
                     row += 1
                     if next_step == "x":  # Exit.
-                        curses.endwin()
-                        exit()
+                        self.quit_menu(self.shop_menu)
 
                     elif next_step == "b":  # Go back.
                         self.logged_in_menu()
@@ -217,9 +212,7 @@ try:
                         self.payment_options_menu(True)
 
                     else:
-                        # print(next_step)
                         self.screen.addstr(row, 40, next_step)
-                        # self.screen.refresh()
                         row += 1
                         try:  # Add a product to your cart.
                             next_step = int(next_step)
@@ -241,16 +234,13 @@ try:
                 # if you're not logged in you can view products, but you can't do anything with a cart.
                 self.screen.addstr(row, 40, "You are not logged in.")
                 self.screen.addstr(row + 1, 40, "Press 'b' to go back and choose a login option, or x to exit.")
-                # print("You are not logged in.\nPress 'b' to go back and choose a login option, or x to exit.")
 
-                # next_step = input("\n>> ")
                 next_step = chr(self.screen.getch())
 
                 if next_step == "b":
                     self.unlogged_in_menu()
                 elif next_step == "x":
-                    curses.endwin()
-                    exit()
+                    self.quit_menu(self.shop_menu)
                 else:
                     self.screen.addstr(17, 40, "Command_not_recognized.")
                     # print("command_not_recognized.")
@@ -261,10 +251,17 @@ try:
             ==========
             Arguments: the string unique ID of one of the products in products.txt.
             """
+            self.screen.clear()
+            self.screen.border(0)
+            row = 4
             item_to_add = get_value("data/products.txt", prod_id)
-            print("how many" + prod_id["name"] + "s would you like to add?")
-            print("'b' to go back, 'x' to exit.")
-            quantity = input(">> ")
+            self.screen.addstr(row, 40, "how many" + prod_id["name"] + "s would you like to add?")
+            # print("how many" + prod_id["name"] + "s would you like to add?")
+            row += 1
+            self.screen.addstr(row, 40, "'b' to go back, 'x' to exit.")
+            # print("'b' to go back, 'x' to exit.")
+            # quantity = input(">> ")
+            quantity = chr(self.screen.getch())
 
             if quantity == "b":  # go back.
                 self.shop_menu()
@@ -274,12 +271,22 @@ try:
                 try:  # add a qty of items to cart property on the current user object.
                     quantity = int(quantity)
                 except ValueError:
-                    print("command not recognized.")
+                    # print("command not recognized.")
                     self.add_to_cart_menu(prod_ID)
                 finally:
                     add_item_to_cart("data/customers.txt", self.current_user, prod_ID, quantity)
-                    print(quantity + item_to_add["name"] + " added to cart.")
-                    self.shop_menu()
+                    row += 3
+                    self.screen.addstr(row, 40, quantity + item_to_add["name"] + " added to cart.")
+                    row += 3
+                    self.screen.addstr(row, 40, "Press 'any key' to return to shopping menu.")
+
+                    quantity = chr(self.screen.getch())
+
+                    if (quantity):
+                        self.shop_menu()
+
+                    # print(quantity + item_to_add["name"] + " added to cart.")
+                    # self.shop_menu()
 
         def view_cart(self):
             """
