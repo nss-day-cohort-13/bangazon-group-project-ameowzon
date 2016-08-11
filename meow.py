@@ -431,12 +431,14 @@ try:
 
             ########## BUILD POPULARITY DICT ##########
             # create dictionary with keys: product ids and values: dict of purchase info
+            total_customers = set()
             li_dict = {obj.product_id: {"qty": 0, "customers": set(), "revenue": 0} for uid, obj in li_lib.items()}
             # loop through all line items and populate corresponding product keys with appropriate info
             for uid, obj in li_lib.items():
                 customer = orders_lib[obj.order_id].customer_id
                 li_dict[obj.product_id]["qty"] += 1
                 li_dict[obj.product_id]["customers"].add(customer)
+                total_customers.add(customer)
             # self.screen.addstr(1, 20, str(li_dict))
             # calculate revenue
             for product, info in li_dict.items():
@@ -473,7 +475,7 @@ try:
                 # limit display names/values
                 product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
                 order = (str(order) if len(str(order)) <= 11 else str(order[:8]) + "...") + " "
-                customers = (str(len(customers)) if len(customers) <= 11 else str(len(customers))[:8] + "...")
+                customers = (len(customers) if len(customers) <= 11 else len(customers)[:8] + "...")
                 revenue = (str(revenue) if len(str(revenue)) <= 14 else str(revenue[:11]) + "...")
 
                 # print product info
@@ -485,7 +487,7 @@ try:
 
             # calculate totals
             order_sum = sum(order_list)
-            customer_sum = len(customer_list)
+            customer_sum = len(total_customers)
             revenue_sum = sum(revenue_list)
 
             # limit totals display
