@@ -422,10 +422,12 @@ try:
 
             Args-None
             """
+            self.screen.clear()
+            self.screen.border(0)
             # initial method setup
-            li_lib = deserialize("line_item.txt")
-            orders_lib = deserialize("orders.txt")
-            products_lib = deserialize("products.txt")
+            li_lib = deserialize("data/line_items.txt")
+            orders_lib = deserialize("data/orders.txt")
+            products_lib = deserialize("data/products.txt")
 
             ########## BUILD POPULARITY DICT ##########
             # create dictionary with keys: product ids and values: dict of purchase info
@@ -434,22 +436,26 @@ try:
             for uid, obj in li_lib.items():
                 customer = orders_lib[obj.order_id].customer_id
                 li_dict[obj.product_id]["qty"] += 1
-                li_dict[obj.product_id]["customers"].append(customer)
+                li_dict[obj.product_id]["customers"].add(customer)
+            # self.screen.addstr(1, 20, str(li_dict))
             # calculate revenue
             for product, info in li_dict.items():
-                price = products_lib[product].price
+                price = products_lib[product]["price"]
                 info["revenue"] = info["qty"] * price
 
+            heading_string = "{0:<18}{1:<11}{2:<11}{3:<15}"
             row_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
             total_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
 
             ########## PRINT REPORT ##########
             row = 5
+            # self.screen.addstr(row, 40, str(li_lib))
+            row += 1
             # print(total_string.format("Products", "Orders", "Customers", "Revenue"))
-            self.screen.addstr(row, 40, total_string.format("Products", "Orders", "Customers", "Revenue"))
+            self.screen.addstr(row, 40, heading_string.format("Products", "Orders", "Customers", "Revenue"))
             row += 1
             self.screen.addstr(row, 40, "*" * 55)
-            row += 3
+            row += 1
             # print("*" * 55)
             order_list, customer_list, revenue_list = [], [], []
             for product, info in li_dict.items():
@@ -466,9 +472,9 @@ try:
 
                 # limit display names/values
                 product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
-                order = (order if len(order) <= 11 else order[:8] + "...") + " "
-                customers = (customers if len(customers) <= 11 else customers[:8] + "...")
-                revenue = (revenue if len(revenue) <= 14 else revenue[:11] + "...")
+                order = (str(order) if len(str(order)) <= 11 else str(order[:8]) + "...") + " "
+                customers = (str(len(customers)) if len(customers) <= 11 else str(len(customers))[:8] + "...")
+                revenue = (str(revenue) if len(str(revenue)) <= 14 else str(revenue[:11]) + "...")
 
                 # print product info
                 self.screen.addstr(row, 40, row_string.format(product_name, order, customers, revenue))
@@ -479,18 +485,19 @@ try:
 
             # calculate totals
             order_sum = sum(order_list)
-            customer_sum = sum(customer_list)
+            customer_sum = len(customer_list)
             revenue_sum = sum(revenue_list)
 
             # limit totals display
-            order_sum = (order_sum if len(str(order_sum)) <= 17 else order_sum[:14] + "...") + " "
-            customer_sum = (customer_sum if len(str(customer_sum)) <= 11 else customer_sum[:8] + "...")
-            revenue_sum = (revenue_sum if len(str(revenue_sum)) <= 14 else revenue_sum[:11] + "...")
+            order_sum = (str(order_sum) if len(str(order_sum)) <= 17 else str(order_sum[:14]) + "...") + " "
+            customer_sum = (str(customer_sum) if len(str(customer_sum)) <= 11 else str(customer_sum[:8]) + "...")
+            revenue_sum = (str(revenue_sum) if len(str(revenue_sum)) <= 14 else str(revenue_sum[:11]) + "...")
 
             # print totals
-            row += 5
+            row += 1
             self.screen.addstr(row, 40, total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
             # print(total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
+            choice = chr(self.screen.getch())
 
     if __name__ == '__main__':
         # Meow().print_hey()
