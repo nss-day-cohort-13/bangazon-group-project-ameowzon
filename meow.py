@@ -499,7 +499,13 @@ try:
             row += 1
             self.screen.addstr(row, 40, total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
             # print(total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
+            row += 1
+            self.screen.addstr(row, 40, "press any key to continue")
             choice = chr(self.screen.getch())
+            if self.current_user is not None:
+                self.logged_in_menu()
+            else:
+                self.unlogged_in_menu()
 
     if __name__ == '__main__':
         # Meow().print_hey()
