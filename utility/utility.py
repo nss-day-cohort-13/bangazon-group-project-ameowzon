@@ -111,3 +111,19 @@ def add_to_file(write_file, write_value):
     # print("to_write[uid] = {0}".format(to_write[uid]))
     serialize(write_file, to_write)
     return uid
+
+def print_menu(handler_fn, screen):
+    """
+    """
+    temp_list, price = handler_fn()
+    row = 12
+
+    if price:
+        for item in temp_list:
+            screen.addstr(row, 40, '{0}. {1}-- ${2}'.format(temp_list.index(item), temp_list[1], temp_list[2]))
+            row += 1
+    else:
+        for item in temp_list:
+            screen.addstr(row, 40, '{0}. {1}'.format(temp_list.index(item), temp_list[1]))
+            row += 1
+
