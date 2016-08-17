@@ -288,20 +288,21 @@ try:
 
         def view_cart(self):
             """
-            Displays the content of the currently logged in user
-
-            Args- None
+            Displays the cart of the currently logged in user. Handles what to say if the user does not have a cart or if their cart is empty.
+            ========
+            Method Arguments: None
             """
+
             # check if user has a cart.
             cart_id = check_if_cart_exists(self.current_user)
-            if len(cart_id) = 0:
+            if cart_id is None:
                 # if they don't have a cart, create one and print "your cart is empty, start shopping"
                 new_order(self.current_user)
                 self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
                 cart_to_print = build_cart_view
                 # if they have a cart, check if cart is not empty.
-                if len(cart_to_print) = 0:
+                if len(cart_to_print) == 0:
                     self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
                 else:
                     # if it's not empty, print it.
