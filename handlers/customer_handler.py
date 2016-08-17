@@ -15,6 +15,7 @@ def generate_new_customer(name="", address="", city="", state="", zipcode="", ph
 
         db.execute("insert into Customer (FullName, StreetAddress, City, StateOfResidence, ZipCode, PhoneNumber) values (?,?,?,?,?,?)", (name, address, city, state, zipcode, phone))
         database.commit()
+
         db.execute("select c.CustomerId from Customer c where c.FullName = ?", (name,))
         thing = db.fetchone()
         return thing[0]
@@ -33,4 +34,4 @@ def generate_customer_menu():
 
         db.execute("""select c.CustomerId, c.FullName
                         from Customer as c""")
-        return db.fetchall(), False
+        return db.fetchall()
