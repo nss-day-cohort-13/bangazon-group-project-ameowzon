@@ -25,9 +25,9 @@ def return_report_line_items(input_file='bangazon.db'):
     Returns a list of line items with orders that have been completed.
     """
 
-    sqlite3.connet(input_file) as conn:
+    sqlite3.connect(input_file) as conn:
         db = conn.cursor()
-        db.execute("SELECT li.* FROM LineItem li, Orders o WHERE li.OrderID == o.OrderID AND o.PaymentID == NULL")
+        db.execute("SELECT li.* FROM LineItem li, Orders o WHERE li.OrderID == o.OrderID AND o.PaymentID != NULL")
         db.commit()
 
     return db.fetchall()
