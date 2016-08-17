@@ -1,22 +1,27 @@
+import sqlite3
 from utility.utility import *
 
 
-def build_temp_product():
-    '''
-    Reads json text file and deserializes it into a dictionary. Returns
-    a uuid.
-    '''
+def read_product_from_db(input_file='bangazon.db'):
+    """ Reads product information from database file.
+        =============
+        input = name of database file from which to read.
+        output = list of tuples from sqlite db/ true. The true is returned
+        to denote that this particular list of tuples will have a column for
+        price that the other handler database loading functions wont have.
+    """
 
-    tempDict = dict()
-    products = read_json_file("./data/test/products.json")
-    products = products["cats"]
+    with sqlite3.connect(input_file) as conn:
+        db = conn.cursor()
 
-    for entry in products:
-        uid = generate_uid()
-        tempDict[uid] = {"name": entry['name'], "price": entry['price']}
+        try:
+            db.execute("SELECT * FROM Product")
 
-    write_json_file(tempDict, "./data/products")
-    return tempDict
+        except sqlite3.OperationalError:
+            return False
+
+        finally:
+            return db.fetchall(), True
 
 
 def load_temp_product(file_name):
@@ -33,7 +38,7 @@ def load_temp_product(file_name):
 def generate_product_list(file_name):
     """
     loads products file and generates a menu-ized dictionary for printing and setting.
-    the key will be the number the user can press to select an option, and the value is the 
+    the key will be the number the user can press to select an option, and the value is the
     txt file's product UID. Meow will use the utility get_value to print the names for each user etc.
     ============
     Method Arguments: None.
