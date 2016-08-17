@@ -13,12 +13,31 @@ def generate_new_customer(name="", address="", city="", state="", zipcode="", ph
     with sqlite3.connect("bangazon.db") as database:
         db = database.cursor()
 
-        db.execute("insert into Customer (FullName, StreetAddress, City, StateOfResidence, ZipCode, PhoneNumber) values (?,?,?,?,?,?)", (name, address, city, state, zipcode, phone))
+        db.execute("""INSERT INTO Customer (FullName, StreetAddress, City, StateOfResidence, ZipCode, PhoneNumber)
+                        VALUES (?,?,?,?,?,?)""",
+                    (name, address, city, state, zipcode, phone))
         database.commit()
 
         db.execute("select c.CustomerId from Customer c where c.FullName = ?", (name,))
         thing = db.fetchone()
         return thing[0]
+
+
+def get_customer_name(customer_id):
+    """
+    Queries the database for the name of the customer the user selects in the meow.py menu.
+    ========
+    Method Arguments: the id of the selected customer.
+    Returns: string name of the selected customer.
+    """
+    with sqlite3.connect("bangazon.db") as database:
+        db = database.cursor()
+
+    db.execute("""SELECT c.FullName
+                    FROM Customer c
+                    WHERE c.CustomerId = ?""", [customer_id])
+    thing = db.fetchone()
+    return thing[0]
 
 
 def generate_customer_menu():
@@ -32,6 +51,6 @@ def generate_customer_menu():
     with sqlite3.connect("bangazon.db") as database:
         db = database.cursor()
 
-        db.execute("""select c.CustomerId, c.FullName
-                        from Customer as c""")
+        db.execute("""SELECT c.CustomerId, c.FullName
+                        FROM Customer c""")
         return db.fetchall(), False

@@ -65,8 +65,7 @@ try:
             # print the logged-in menu options.
             # request input.
             # based on input, do:
-            customer_info = get_value("data/customers.txt", self.current_user)
-            name = customer_info.name
+            name = get_customer_name(self.current_user)
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(10, 40, "Welcome " + name + "!")
