@@ -26,6 +26,6 @@ def generate_payments_menu(cust_key):
 		c = conn.cursor()
 		c.execute("""select p.PaymentId, p.Type from PaymentMethod p
 			inner join Customer c on p.CustomerId = c.CustomerId
-			and c.CustomerId=?""", (cust_key))
+			and c.CustomerId=?""", [cust_key])
 
 		return c.fetchall()
