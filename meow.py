@@ -294,8 +294,8 @@ try:
             """
             # check if user has a cart.
             cart_id = check_if_cart_exists(self.current_user)
-            # if they don't, create one and print "your cart is empty, start shopping"
             if len(cart_id) = 0:
+                # if they don't have a cart, create one and print "your cart is empty, start shopping"
                 new_order(self.current_user)
                 self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
@@ -316,15 +316,13 @@ try:
                     self.screen.addstr(row, 40, "*" * 44)
                     row += 1
                     # loop over cart items and calculate total (grab price from 'products.txt')
-                    for prod_id, qty in cart.items():
-                        product_dict = get_value("data/products.txt", prod_id)
-                        total = qty * product_dict["price"]
+                    for index, item in cart_to_print:
                         # append total to list of totals (for amount due calculation)
-                        total_list.append(total)
+                        total_list.append(item[2])
                         # limit product name
-                        product_name = product_dict["name"]
-                        product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
-                        self.screen.addstr(row, 40, row_string.format(product_name, qty, total))
+                        product_name = (item[0] if len(item[0]) <= 17 else item[0][:14] + "...") + " "
+                        # print
+                        self.screen.addstr(row, 40, row_string.format(product_name, item[1], item[2]))
                         row += 1
                     self.screen.addstr(row, 40, "*" * 44)
                     row += 1
