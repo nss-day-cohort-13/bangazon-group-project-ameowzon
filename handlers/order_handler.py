@@ -1,41 +1,30 @@
 from objects.order_object import *
-from utility.utility import *
+import sqlite3
+import uuid
 
-
-def new_order(cid, pid, file='data/orders.txt'):
-    """ Creates a new order object with the customer ID and payment
-        passed in
-        Method arguments
-        ================
-        cid - the unique customer ID
-        pid - the unique payment ID
+def new_order(cust_key):
     """
-    new_order_obj = Order(cid, pid)
-    new_id = add_to_file(file, new_order_obj)
-    return new_id
+    Create new order row in db
 
-
-def build_order_dict(cid=None, file='data/orders.txt'):
-    """ Returns a dictionary of orders matching the arguments passed in
-      Method arguments
-      ================
-      file - the file to read from; default is the standard orders file,
-             but in testing, the test file is passed in
-      cid -  the customer ID to match; default is none, which will return
-             all customers
+    Args-customer id
     """
-    order_lib = deserialize(file)
-    temp_order_lib = dict()
-    index = 1
+    with sqlite3.connect("bangazon.db") as conn:
+        c = conn.cursor()
+        c.execute("INSERT INTO Orders (PaymentId, CustomerId) VALUES (?,?)", (None, cust_key))
+        conn.commit()
+        c.execute("SELECT o.OrderId FROM Orders o WHERE o.CustomerId=? and o.PaymentId=?", (cust_key, None))
+        order_id = c.fetchone()
+        print(order_id[0])
+        return order_id[0]
 
-    if cid == None:
-        for uid, item in order_lib.items():
-            temp_order_lib[index] = uid
-            index += 1
-    else:
-        for uid, item in order_lib.items():
-            if item.customer_id == cid:
-                temp_order_lib[index] = uid
-                index += 1
 
-    return temp_order_lib
+def add_payment_to_order(cust_key, payment_id):
+    """
+    Adds a payment method to an open order
+
+    Args-order id being completed, payment id of payment method
+    """
+    with sqlite3.connect("bangazon.db") as conn:
+        c = conn.cursor()
+        c.execute("UPDATE Orders SET PaymentId=? WHERE CustomerId=? and PaymentId=?", (payment_id, cust_key, None))
+        conn.commit()
