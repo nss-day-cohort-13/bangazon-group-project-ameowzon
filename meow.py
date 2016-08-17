@@ -183,7 +183,9 @@ try:
             self.screen.clear()
             self.screen.border(0)
 
-            product_list = print_menu(read_product_from_db, self.screen, 3)
+            row = 3
+            product_list = print_menu(read_product_from_db, self.screen, row)
+            row += len(product_list)
 
             # are you logged in or not?
             row += 2

@@ -34,4 +34,4 @@ def generate_customer_menu():
 
         db.execute("""select c.CustomerId, c.FullName
                         from Customer as c""")
-        return db.fetchall()
+        return db.fetchall(), False

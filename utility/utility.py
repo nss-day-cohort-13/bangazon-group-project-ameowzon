@@ -125,11 +125,11 @@ def print_menu(handler_fn, screen, row_start):
 
     if price:
         for item in temp_list:
-            screen.addstr(row, 40, '{0}. {1}-- ${2}'.format(temp_list.index(item), temp_list[1], temp_list[2]))
+            screen.addstr(row_start, 40, '{0}. {1}-- ${2}'.format(temp_list.index(item), item[1], item[2]))
             row_start += 1
     else:
         for item in temp_list:
-            screen.addstr(row, 40, '{0}. {1}'.format(temp_list.index(item), temp_list[1]))
+            screen.addstr(row_start, 40, '{0}. {1}'.format(temp_list.index(item), item[1]))
             row_start += 1
 
     return temp_list
