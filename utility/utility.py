@@ -113,7 +113,13 @@ def add_to_file(write_file, write_value):
     return uid
 
 def print_menu(handler_fn, screen):
-    """
+    """ Prints a menu from an object list
+        Method arguments
+        ================
+        handler_fn - function reference that will return the list to print and
+                     a price boolean that determines whether to print the item
+                     as a product with a price
+        screen - the instance of screen on Meow
     """
     temp_list, price = handler_fn()
     row = 3
@@ -127,3 +133,13 @@ def print_menu(handler_fn, screen):
             screen.addstr(row, 40, '{0}. {1}'.format(temp_list.index(item), temp_list[1]))
             row += 1
 
+    return temp_list
+
+def set_thing(temp_list, index):
+    """ Returns the UID of the selected item in a temp list
+        Method arguments
+        ================
+        temp_list - the temporary list created in print_menu
+        index - the users choice from print_menu
+    """
+    return temp_list[index][0]
