@@ -112,7 +112,7 @@ def add_to_file(write_file, write_value):
     serialize(write_file, to_write)
     return uid
 
-def print_menu(handler_fn, screen, row_start):
+def print_menu(handler_fn, screen, row_start, cid=None):
     """ Prints a menu from an object list
         Method arguments
         ================
@@ -121,7 +121,10 @@ def print_menu(handler_fn, screen, row_start):
                      as a product with a price
         screen - the instance of screen on Meow
     """
-    temp_list, price = handler_fn()
+    if cid != None:
+        temp_list, price = handler_fn(cid)
+    else:
+        temp_list, price = handler_fn()
 
     if price:
         for item in temp_list:

@@ -347,7 +347,7 @@ try:
             self.screen.addstr(3, 20, "Your payment types:")
 
             how_far_down = 5
-            payment_list = print_menu(generate_payment_menu, self.screen, how_far_down)
+            payment_list = print_menu(generate_payments_menu, self.screen, how_far_down, cid=self.current_user)
             how_far_down += len(payment_list)
 
             # for each payment id in payment_list, use get_value to print the name or something.
