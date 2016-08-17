@@ -4,7 +4,7 @@ import uuid
 
 def new_order(cust_key):
     """
-    Create new order row in db
+    Create new order row in db, return order id
 
     Args-customer id
     """
@@ -21,7 +21,7 @@ def add_payment_to_order(cust_key, payment_id):
     """
     Adds a payment method to an open order
 
-    Args-order id being completed, payment id of payment method
+    Args-customer id with open order, payment id of payment method
     """
     with sqlite3.connect("bangazon.db") as conn:
         c = conn.cursor()
