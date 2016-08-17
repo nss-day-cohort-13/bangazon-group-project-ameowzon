@@ -1,28 +1,32 @@
 from objects.payment_object import *
-from utility.utility import *
+import sqlite3
 
-def generate_new_payment(file, name, account_number, cust_key):
+def generate_new_payment(name, account_number, cust_key):
 	"""
-	Generates a new payment object and adds it to the passed in file name
+	Generates a new payment object and adds it to the db
 
-	Args-file name, payment type name, account number, customer payment will be associated with
+	Args-payment type name, account number, customer id payment will be associated with
 	"""
-	new_payment = Payment_Object(name, account_number, cust_key)
-	payment_id = add_to_file(file, new_payment)
-	return payment_id
+	with sqlite3.connect("bangazon.db") as conn:
+		c = conn.cursor()
+		c.execute("""insert into PaymentMethod
+			(Type, AccountNumber, CustomerId) values (?,?,?)""", (name, account_number, cust_key))
+		conn.commit()
+		c.execute("""select p.PaymentMethodId from PaymentMethod p
+			where p.CustomerId =? and p.Type=?""", (cust_key, name))
+		payment_id = c.fetchone()
+		return payment_id[0]
 
-def generate_payments_menu(file, cust_key):
+def generate_payments_menu(cust_key):
 	"""
-	Generates payment menu with all payment objects associated with the current customer
+	Queries db and generates payment menu with all payment objects associated with the current customer
 
-	Args-file name, customer
+	Args-customer id
 	"""
-	lib = deserialize(file)
-	counter = 1
-	payments_menu = dict()
-	for uid, obj in lib.items():
-		if obj.customer == cust_key:
-			payments_menu[counter] = uid
-			counter += 1
-	return payments_menu
+	with sqlite3.connect("bangazon.db") as conn:
+		c = conn.cursor()
+		c.execute("""select p.PaymentId, p.Type from PaymentMethod p
+			inner join Customer c on p.CustomerId = c.CustomerId
+			and c.CustomerId=?""", [cust_key])
 
+		return c.fetchall()
