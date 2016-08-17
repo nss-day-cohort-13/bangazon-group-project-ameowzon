@@ -111,3 +111,42 @@ def add_to_file(write_file, write_value):
     # print("to_write[uid] = {0}".format(to_write[uid]))
     serialize(write_file, to_write)
     return uid
+
+def print_menu(handler_fn, screen, row_start, cid=None):
+    """ Prints a menu from an object list
+        Method arguments
+        ================
+        handler_fn - function reference that will return the list to print and
+                     a price boolean that determines whether to print the item
+                     as a product with a price
+        screen - the instance of screen on Meow
+        row_start - the row you would like to start adding strings
+        cid - optional customerID argument
+    """
+    if cid != None:
+        temp_list, price = handler_fn(cid)
+    else:
+        temp_list, price = handler_fn()
+
+    if price:
+        for item in temp_list:
+            screen.addstr(row_start, 40, '{0}. {1}-- ${2}'.format(temp_list.index(item), item[1], item[2]))
+            row_start += 1
+    else:
+        for item in temp_list:
+            screen.addstr(row_start, 40, '{0}. {1}'.format(temp_list.index(item), item[1]))
+            row_start += 1
+
+    return temp_list
+
+def set_thing(temp_list, index):
+    """ Returns the UID of the selected item in a temp list
+        Method arguments
+        ================
+        temp_list - the temporary list created in print_menu
+        index - the users choice from print_menu
+    """
+    try:
+        return temp_list[index][0]
+    except:
+        return None
