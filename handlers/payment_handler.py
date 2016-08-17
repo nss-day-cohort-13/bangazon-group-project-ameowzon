@@ -7,11 +7,14 @@ def generate_new_payment(name, account_number, cust_key):
 
 	Args-payment type name, account number, customer id payment will be associated with
 	"""
-	new_payment = Payment_Object(name, account_number, cust_key)
 	with sqlite3.connect("bangazon.db") as conn:
 		c = conn.cursor()
-		c.execute("insert into PaymentMethod values (?,?,?)", (name, account_number, cust_key))
-
+		c.execute("""insert into PaymentMethod
+			(Type, AccountNumber, CustomerId) values (?,?,?)""", (name, account_number, cust_key))
+		conn.commit()
+		c.execute("select p.PaymentMethodId from PaymentMethod p where p.Type=?", [name])
+		payment_id = c.fetchone()
+		return payment_id[0]
 
 def generate_payments_menu(cust_key):
 	"""
