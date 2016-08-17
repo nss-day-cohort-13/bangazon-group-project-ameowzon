@@ -292,39 +292,44 @@ try:
 
             Args- None
             """
-            # get the user object of the currently logged in user
-            current_user_obj = get_value("data/customers.txt", self.current_user)
-            # get that users cart
-            cart = current_user_obj.cart
-            # check if cart is not empty
-            if cart == {}:
+            # check if user has a cart.
+            cart_id = check_if_cart_exists(self.current_user)
+            # if they don't, create one and print "your cart is empty, start shopping"
+            if len(cart_id) = 0:
+                new_order(self.current_user)
                 self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
-                # format for columns
-                row_string = "{0:<18}{1:<11}${2:<14}"
-                total_string = "{0:<29}${1:<14}"
-                heading_string = "{0:<29}{1:<14}"
-                total_list = []
-                row = 18
-                self.screen.addstr(row, 40, heading_string.format("Your cart:", "Totals:"))
-                row += 1
-                self.screen.addstr(row, 40, "*" * 44)
-                row += 1
-                # loop over cart items and calculate total (grab price from 'products.txt')
-                for prod_id, qty in cart.items():
-                    product_dict = get_value("data/products.txt", prod_id)
-                    total = qty * product_dict["price"]
-                    # append total to list of totals (for amount due calculation)
-                    total_list.append(total)
-                    # limit product name
-                    product_name = product_dict["name"]
-                    product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
-                    self.screen.addstr(row, 40, row_string.format(product_name, qty, total))
+                cart_to_print = build_cart_view
+                # if they have a cart, check if cart is not empty.
+                if len(cart_to_print) = 0:
+                    self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
+                else:
+                    # if it's not empty, print it.
+                    # format for columns
+                    row_string = "{0:<18}{1:<11}${2:<14}"
+                    total_string = "{0:<29}${1:<14}"
+                    heading_string = "{0:<29}{1:<14}"
+                    total_list = []
+                    row = 18
+                    self.screen.addstr(row, 40, heading_string.format("Your cart:", "Totals:"))
                     row += 1
-                self.screen.addstr(row, 40, "*" * 44)
-                row += 1
-                # self.screen.addstr out total amount due
-                self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
+                    self.screen.addstr(row, 40, "*" * 44)
+                    row += 1
+                    # loop over cart items and calculate total (grab price from 'products.txt')
+                    for prod_id, qty in cart.items():
+                        product_dict = get_value("data/products.txt", prod_id)
+                        total = qty * product_dict["price"]
+                        # append total to list of totals (for amount due calculation)
+                        total_list.append(total)
+                        # limit product name
+                        product_name = product_dict["name"]
+                        product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
+                        self.screen.addstr(row, 40, row_string.format(product_name, qty, total))
+                        row += 1
+                    self.screen.addstr(row, 40, "*" * 44)
+                    row += 1
+                    # self.screen.addstr out total amount due
+                    self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
 
         def convert_to_completed(self, payment_uid):
             # grab user name top-level variable.
