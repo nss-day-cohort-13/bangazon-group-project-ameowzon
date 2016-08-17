@@ -120,6 +120,8 @@ def print_menu(handler_fn, screen, row_start, cid=None):
                      a price boolean that determines whether to print the item
                      as a product with a price
         screen - the instance of screen on Meow
+        row_start - the row you would like to start adding strings
+        cid - optional customerID argument
     """
     if cid != None:
         temp_list, price = handler_fn(cid)
