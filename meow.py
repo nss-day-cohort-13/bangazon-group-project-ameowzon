@@ -247,13 +247,13 @@ try:
             """
             Receives a unique id for a product to add to the current user's 'cart' property. To separate concerns from shop_menu, this function requests the quantity to add, and adds the item to the cart.
             ==========
-            Arguments: the string unique ID of one of the products in products.txt.
+            Arguments: product id
             """
             self.screen.clear()
             self.screen.border(0)
             row = 4
-            item_to_add = get_value("data/products.txt", prod_ID)
-            self.screen.addstr(row, 22, "how many " + item_to_add["name"] + "s would you like to add?")
+            product_name = get_product_name(prod_id)
+            self.screen.addstr(row, 22, "how many " + product_name + "'s would you like to add?")
             # print("how many" + prod_id["name"] + "s would you like to add?")
             row += 1
             self.screen.addstr(row, 22, "'b' to go back, 'x' to exit.")
@@ -272,9 +272,10 @@ try:
                     # print("command not recognized.")
                     self.add_to_cart_menu(prod_ID)
                 finally:
+                    #***#
                     add_item_to_cart("data/customers.txt", self.current_user, prod_ID, quantity)
                     row += 3
-                    self.screen.addstr(row, 40, str(quantity) + " " + item_to_add["name"] + " added to cart.")
+                    self.screen.addstr(row, 40, str(quantity) + " " + product_name + " added to cart.")
                     row += 3
                     self.screen.addstr(row, 40, "Press 'any key' to return to shopping menu.")
 
