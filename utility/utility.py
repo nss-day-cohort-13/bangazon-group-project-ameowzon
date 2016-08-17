@@ -124,12 +124,12 @@ def print_menu(handler_fn, screen):
     temp_list, price = handler_fn()
 
     if price:
-        row = 12
+        row = 3
         for item in temp_list:
             screen.addstr(row, 40, '{0}. {1}-- ${2}'.format(temp_list.index(item), temp_list[1], temp_list[2]))
             row += 1
     else:
-        row = 3
+        row = 12
         for item in temp_list:
             screen.addstr(row, 40, '{0}. {1}'.format(temp_list.index(item), temp_list[1]))
             row += 1
