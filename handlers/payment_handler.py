@@ -29,4 +29,4 @@ def generate_payments_menu(cust_key):
 			inner join Customer c on p.CustomerId = c.CustomerId
 			and c.CustomerId=?""", [cust_key])
 
-		return c.fetchall()
+		return c.fetchall(), False
