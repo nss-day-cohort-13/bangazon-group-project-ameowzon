@@ -130,7 +130,8 @@ try:
             self.screen.clear()
             self.screen.border(0)
 
-            user_list = print_menu(generate_customer_menu, self.screen)
+            user_list = print_menu(generate_customer_menu, self.screen, 12)
+            self.screen.refresh()
 
             try:
                 choice = int(chr(self.screen.getch()))
@@ -182,7 +183,7 @@ try:
             self.screen.clear()
             self.screen.border(0)
 
-            product_list = print_menu(read_product_from_db, self.screen)
+            product_list = print_menu(read_product_from_db, self.screen, 3)
 
             # are you logged in or not?
             row += 2
@@ -341,20 +342,19 @@ try:
 
         def payment_options_menu(self, completing=False):
             self.screen.clear()
-            self.screen.addstr(3, 20, "your payment types:")
             self.screen.border(0)
-            how_far_down = 4
-            # pass user name top-level variable to generate_payment_list.
-            payment_options = generate_payments_menu("data/payments.txt", self.current_user)
+            self.screen.addstr(3, 20, "Your payment types:")
+
+            how_far_down = 5
+            payment_list = print_menu(generate_payment_menu, self.screen, how_far_down)
+            how_far_down += len(payment_list)
+
             # for each payment id in payment_list, use get_value to print the name or something.
-            if payment_options == {}:
-                self.screen.addstr(how_far_down, 40, "no payment types yet!")
+            if len(payment_list) == 0:
+                self.screen.addstr(how_far_down, 40, "No payment types yet!")
                 how_far_down += 1
             else:
-                for index, uid in payment_options.items():
-                    payment = get_value("data/payments.txt", uid)
-                    self.screen.addstr(how_far_down, 40, str(index) + ". " + payment.name)
-                    how_far_down += 1
+                pass
 
             self.screen.addstr(how_far_down, 40, '')
             how_far_down += 1
@@ -373,7 +373,7 @@ try:
                 else:
                     self.payment_options_menu()
             elif completing is True:
-                self.screen.addstr(how_far_down, 40, "press the number of the payment to use for this order.")
+                self.screen.addstr(how_far_down, 40, "Press the number of the payment to use for this order.")
                 how_far_down += 1
                 self.screen.addstr(how_far_down, 40, "n to make a new payment. b to go back. x to exit.")
                 how_far_down += 1
@@ -390,8 +390,9 @@ try:
                     except ValueError:
                         self.payment_options_menu(completing=True)
                     finally:
-                        if next_step in payment_options.keys():
-                            self.convert_to_completed(payment_options[next_step])
+                        if next_step >= 0 and next_step < len(payment_list):
+                            payment_uid = set_thing(payment_list, next_step)
+                            self.convert_to_completed(payment_uid)
                         else:
                             self.payment_options_menu(True)
 

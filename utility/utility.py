@@ -112,7 +112,7 @@ def add_to_file(write_file, write_value):
     serialize(write_file, to_write)
     return uid
 
-def print_menu(handler_fn, screen):
+def print_menu(handler_fn, screen, row_start):
     """ Prints a menu from an object list
         Method arguments
         ================
@@ -124,15 +124,13 @@ def print_menu(handler_fn, screen):
     temp_list, price = handler_fn()
 
     if price:
-        row = 3
         for item in temp_list:
             screen.addstr(row, 40, '{0}. {1}-- ${2}'.format(temp_list.index(item), temp_list[1], temp_list[2]))
-            row += 1
+            row_start += 1
     else:
-        row = 12
         for item in temp_list:
             screen.addstr(row, 40, '{0}. {1}'.format(temp_list.index(item), temp_list[1]))
-            row += 1
+            row_start += 1
 
     return temp_list
 
