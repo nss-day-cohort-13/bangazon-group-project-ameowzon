@@ -327,18 +327,8 @@ try:
                 self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
 
         def convert_to_completed(self, payment_uid):
-            # grab user name top-level variable.
-            # generate a new order uid with that user name and the UID argument.
-            # for each cart item, for qty number of times, generate a line item with the product number and order number.
-            oid = new_order(self.current_user, payment_uid)
-            current_user_obj = get_value("data/customers.txt", self.current_user)
-            cart = current_user_obj.cart
-
-            for prod_id, qty in cart.items():
-                while qty > 0:
-                    generate_new_line_item('data/line_items.txt', oid, prod_id)
-                    qty -= 1
-            delete_cart('data/customers.txt', self.current_user)
+            # add payment id to customers open order, direct to logged-in menu
+            add_payment_to_order(self.current_user, payment_uid)
             self.logged_in_menu()
 
         def payment_options_menu(self, completing=False):
@@ -404,7 +394,7 @@ try:
             self.screen.refresh()
             account_num = get_param("enter the account number.", self.screen)
             account_name = get_param("enter a nickname for this account.", self.screen)
-            generate_new_payment("data/payments.txt", account_name, account_num, self.current_user)
+            generate_new_payment(account_name, account_num, self.current_user)
 
         def generate_popularity_report(self):
             """
