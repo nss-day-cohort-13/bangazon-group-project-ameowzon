@@ -116,7 +116,7 @@ def print_menu(handler_fn, screen):
     """
     """
     temp_list, price = handler_fn()
-    row = 12
+    row = 3
 
     if price:
         for item in temp_list:
