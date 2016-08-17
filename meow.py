@@ -189,13 +189,8 @@ try:
             self.screen.clear()
             self.screen.border(0)
 
-            row = 3
-            product_menu = generate_product_list("data/products.txt")
-            for index, UID in product_menu.items():
-                info = get_value("data/products.txt", UID)
-                self.screen.border(0)
-                self.screen.addstr(row, 40, "{0}. {1}-- ${2}".format(index, info["name"], info["price"]))
-                row += 1
+            product_list = print_menu(read_product_from_db, self.screen)
+
             # are you logged in or not?
             row += 2
             if self.current_user is not None:
@@ -228,7 +223,8 @@ try:
                         finally:
                             row += 2
                             if next_step in product_menu.keys():
-                                self.add_to_cart_menu(product_menu[next_step])
+                                prod_id = set_thing(product_list, next_step)
+                                self.add_to_cart_menu(prod_id)
                             else:
                                 # print("command not recognized.")
                                 self.screen.addstr(row, 40, "Command not recognized.")
