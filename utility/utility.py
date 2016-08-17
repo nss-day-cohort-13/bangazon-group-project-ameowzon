@@ -143,4 +143,7 @@ def set_thing(temp_list, index):
         temp_list - the temporary list created in print_menu
         index - the users choice from print_menu
     """
-    return temp_list[index][0]
+    try:
+        return temp_list[index][0]
+    except:
+        return None

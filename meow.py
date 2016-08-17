@@ -127,22 +127,15 @@ try:
             # generate the customer menu.
             # for each customer item, use get_value to print the name value.
             # request input for which user.
-            user_lib = generate_customer_menu('data/customers.txt')
-
             self.screen.clear()
             self.screen.border(0)
 
-            row = 12
-            for index, user_id in user_lib.items():
-                user = get_value('data/customers.txt', user_id)
-                self.screen.addstr(row, 40, '{0}. {1}'.format(index, user.name))
-                row += 1
-            self.screen.addstr((row + 1), 40, '')
-            self.screen.refresh()
+            user_list = print_menu(generate_customer_menu, self.screen)
 
             try:
                 choice = int(chr(self.screen.getch()))
-                self.set_user(user_lib[choice])
+                user_uid = set_thing(user_list, choice)
+                self.set_user(user_uid)
                 self.logged_in_menu()
 
             except ValueError:
