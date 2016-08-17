@@ -1,6 +1,5 @@
 from objects.order_object import *
 import sqlite3
-import uuid
 
 def new_order(cust_key):
     """
