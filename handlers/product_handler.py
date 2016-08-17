@@ -16,7 +16,6 @@ def read_product_from_db(input_file='bangazon.db'):
 
         try:
             db.execute("SELECT * FROM Product")
-            print(db.fetchall())
 
         except sqlite3.OperationalError:
             return False
