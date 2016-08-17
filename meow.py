@@ -222,7 +222,7 @@ try:
                             self.shop_menu()
                         finally:
                             row += 2
-                            if next_step in product_menu.keys():
+                            if next_step >= 0 and next_step < len(product_list):
                                 prod_id = set_thing(product_list, next_step)
                                 self.add_to_cart_menu(prod_id)
                             else:
