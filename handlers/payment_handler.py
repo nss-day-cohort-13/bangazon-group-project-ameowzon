@@ -12,7 +12,8 @@ def generate_new_payment(name, account_number, cust_key):
 		c.execute("""insert into PaymentMethod
 			(Type, AccountNumber, CustomerId) values (?,?,?)""", (name, account_number, cust_key))
 		conn.commit()
-		c.execute("select p.PaymentMethodId from PaymentMethod p where p.Type=?", [name])
+		c.execute("""select p.PaymentMethodId from PaymentMethod p
+			where p.CustomerId =? and p.Type=?""", (cust_key, name))
 		payment_id = c.fetchone()
 		return payment_id[0]
 
