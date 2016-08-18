@@ -118,6 +118,21 @@ class test_line_item(unittest.TestCase):
         self.assertIsInstance(thing[0][1], int)
         self.assertIsInstance(thing[0][2], int)
 
+class test_admin(unittest.TestCase):
+
+    def test_verify_admin(self):
+        success = verify_admin('1', 'asdf')
+        self.assertEqual(success, False)
+
+        success = verify_admin('2', 'asdf')
+        self.assertEqual(success, False)
+
+        success = verify_admin('2', 'teamameowzonFTW')
+        self.assertEqual(success, False)
+
+        success = verify_admin('1', 'teamameowzonFTW')
+        self.assertEqual(success, True)
+
 
 class test_meow(unittest.TestCase):
 
