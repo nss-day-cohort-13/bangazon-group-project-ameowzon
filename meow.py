@@ -6,11 +6,6 @@ from handlers.payment_handler import *
 from handlers.product_handler import *
 from handlers.cart_handler import *
 
-from objects.customer_object import *
-from objects.line_item_object import *
-from objects.order_object import *
-from objects.payment_object import *
-
 import curses
 
 try:
@@ -19,16 +14,17 @@ try:
             # init curses
             self.screen = curses.initscr()
             self.current_user = None
+            self.user_name = ""
             self.cart_id = None
             self.unlogged_in_menu()
 
         def unlogged_in_menu(self):
-
-            # 1. log in to a user (user_menu)
-            # 2. create a new user (create_new_user)
-            # 3. view available products (shop_menu)
-            # 4. generate report (generate_popularity_report)
-            # 5. exit.
+            """
+            Prints top-level menu options for a unlogged-in user, and requests next-step input. Based on the input, continues to the next menu.
+            Menu options: 1. log in to an existing user (new user menu). 2. create a new user (new user menu). 3. view available products (shop menu). 4. view popularity report. 5. exit.
+            ========
+            Method Arguments: None
+            """
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(12, 40, "1. Log in to a user")
@@ -41,7 +37,9 @@ try:
 
             try:
                 choice = int(chr(self.screen.getch()))
-
+            except ValueError:
+                self.unlogged_in_menu()
+            finally:
                 if (choice == 1):  # Log in
                     self.user_menu()
 
@@ -59,16 +57,16 @@ try:
                 else:
                     self.unlogged_in_menu()
 
-            except ValueError:
-                self.unlogged_in_menu()
-
-        def logged_in_menu(self, name):
-            # print the logged-in menu options.
-            # request input.
-            # based on input, do:
+        def logged_in_menu(self):
+            """
+            Prints top-level menu options for a logged-in user, and requests next-step input. Based on the input, continues to the next menu.
+            Menu options: 1. log out and return to unlogged in menu. 2. shop (go to shop menu). 3. view payment options menu. 4. view popularity report. 5. exit.
+            ========
+            Method Arguments: None
+            """
             self.screen.clear()
             self.screen.border(0)
-            self.screen.addstr(10, 40, "Welcome " + name + "!")
+            self.screen.addstr(10, 40, "Welcome " + self.user_name + "!")
             self.screen.addstr(11, 40, "")
             self.screen.addstr(12, 40, '1. Log out')
             self.screen.addstr(13, 40, '2. Shop')
@@ -80,7 +78,9 @@ try:
 
             try:
                 choice = int(chr(self.screen.getch()))
-
+            except ValueError:
+                self.logged_in_menu()
+            finally:
                 if choice == 1:
                     self.reset_user()
                     self.unlogged_in_menu()
@@ -96,11 +96,15 @@ try:
 
                 elif choice == 5:
                     self.quit_menu(self.logged_in_menu)
-
-            except ValueError:
-                self.logged_in_menu()
+                else:
+                    self.logged_in_menu()
 
         def quit_menu(self, back_to_menu):
+            """
+            This function is called if the user enters 'quit' input in any other menu. Asks the user if they really want to quit, and based on their final input, either quits or goes back to the previous menu.
+            ========
+            Method argument: the name of the function to go back to if the user changes their mind about quitting.
+            """
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(12, 40, 'Are you sure you want to exit? [ y / n ]')
@@ -109,7 +113,6 @@ try:
 
             try:
                 choice = chr(self.screen.getch())
-
                 if choice.lower() == 'y':
                     curses.endwin()
                     quit()
@@ -118,7 +121,6 @@ try:
                         self.unlogged_in_menu()
                     else:
                         back_to_menu()
-
             except ValueError:
                 back_to_menu()
 
@@ -146,17 +148,14 @@ try:
                     self.user_menu()
                 finally:
                     try:
-                        user_uid = set_thing(user_list, choice)
-                        name = get_customer_name(user_uid)
+                        self.current_user = set_thing(user_list, choice)
+                        self.user_name = get_customer_name(self.current_user)
                     except TypeError:
                         self.user_menu()
-                    # except IndexError:
-                    #     self.user_menu()
-                    # except ValueError:
-                    #     self.user_menu()
+                    except IndexError:
+                        self.user_menu()
                     finally:
-                        self.set_user(user_uid)
-                        self.logged_in_menu(name)
+                        self.logged_in_menu()
 
         def create_new_user(self):
             # request input for all the things.
@@ -171,8 +170,9 @@ try:
             phone = get_param('What is your phone number?', self.screen)
 
             try:
-                new_uid = generate_new_customer('data/customers.txt', name, address, city, state, zipcode, phone)
+                new_uid = generate_new_customer(name, address, city, state, zipcode, phone)
                 self.set_user(new_uid)
+                self.user_name = name
                 self.logged_in_menu()
             except:
                 self.unlogged_in_menu()
