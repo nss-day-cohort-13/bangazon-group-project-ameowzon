@@ -311,10 +311,13 @@ try:
             """
 
             # check if user has a cart.
-            self.cart_id = check_if_cart_exists(self.current_user)
+            try:
+                self.cart_id = check_if_cart_exists(self.current_user)
+            except TypeError:
+                pass
             if self.cart_id is None:
                 # if they don't have a cart, create one and print "your cart is empty, start shopping"
-                new_order(self.current_user)
+                self.cart_id = new_order(self.current_user)
                 self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
                 cart_to_print = build_cart_view(self.cart_id)
