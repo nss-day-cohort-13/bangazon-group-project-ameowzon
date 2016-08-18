@@ -1,5 +1,6 @@
 from meow import *
 import unittest
+import sqlite3
 
 
 class test_utility(unittest.TestCase):
@@ -65,9 +66,9 @@ class test_payment(unittest.TestCase):
         with sqlite3.connect('bangazon.db') as conn:
             db = conn.cursor()
             db.execute("""
-DELETE FROM PaymentMethod p
-WHERE p.PaymentId = ?
-                """, (thing))
+DELETE FROM PaymentMethod
+WHERE PaymentId = ?
+                """, [thing])
 
     def test_generate_payment_menu(self):
         thing = generate_payments_menu(2)
@@ -114,9 +115,9 @@ class test_order(unittest.TestCase):
         with sqlite3.connect('bangazon.db') as conn:
             db = conn.cursor()
             db.execute("""
-DELETE FROM Orders o
-WHERE o.OrderId = ?
-                """ , (order_num))
+DELETE FROM Orders
+WHERE OrderId = ?
+                """ , [order_num])
 
 
 class test_line_item(unittest.TestCase):
