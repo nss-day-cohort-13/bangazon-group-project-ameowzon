@@ -66,6 +66,14 @@ class test_payment(unittest.TestCase):
         thing = generate_new_payment("Visa", "3", 4)
         self.assertIsInstance(thing, int)
 
+        # Clean up
+        with sqlite3.connect('bangazon.db') as conn:
+            db = conn.cursor()
+            db.execute("""
+DELETE FROM PaymentMethod
+WHERE PaymentId = ?
+                """, [thing])
+
     def test_generate_payment_menu(self):
         thing = generate_payments_menu(2)
         self.assertEqual(thing[1], False)
@@ -107,20 +115,16 @@ class test_order(unittest.TestCase):
         order_num = new_order(1)
         self.assertIsInstance(order_num, int)
 
-    def test_add_payment_to_order(self):
-        # I don't know if we can test this since it's not returning anything.
-        pass
-
-    def test_get_last_order_for_menu(self):
-        product_list = get_last_order_for_menu()
-        pass
+        # Clean up
+        with sqlite3.connect('bangazon.db') as conn:
+            db = conn.cursor()
+            db.execute("""
+DELETE FROM Orders
+WHERE OrderId = ?
+                """ , [order_num])
 
 
 class test_line_item(unittest.TestCase):
-
-    def test_generate_new_line_item(self):
-        # I don't think we can test this since it's not returning anything.
-        pass
 
     def test_return_report_line_items(self):
         thing = return_report_line_items()
