@@ -23,6 +23,19 @@ def read_product_from_db(input_file='bangazon.db'):
         finally:
             return db.fetchall(), True
 
+def get_product_from_db(prod_id, input_file='bangazon.db'):
+    """
+    Gets single product info from db
+
+    Args-product id
+    """
+    with sqlite3.connect(input_file) as conn:
+        db = conn.cursor()
+
+        db.execute("SELECT p.Name FROM Product p WHERE p.ProductId=?", [prod_id])
+        product_name = db.fetchone()
+        return product_name[0]
+
 
 def load_temp_product(file_name):
     """
