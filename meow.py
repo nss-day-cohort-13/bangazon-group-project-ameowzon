@@ -419,22 +419,6 @@ try:
             report_list = return_report_line_items()
             total_list = return_report_totals()
 
-            # ########## BUILD POPULARITY DICT ##########
-            # # create dictionary with keys: product ids and values: dict of purchase info
-            # total_customers = set()
-            # li_dict = {obj.product_id: {"qty": 0, "customers": set(), "revenue": 0} for uid, obj in li_lib.items()}
-            # # loop through all line items and populate corresponding product keys with appropriate info
-            # for uid, obj in li_lib.items():
-            #     customer = orders_lib[obj.order_id].customer_id
-            #     li_dict[obj.product_id]["qty"] += 1
-            #     li_dict[obj.product_id]["customers"].add(customer)
-            #     total_customers.add(customer)
-            # # self.screen.addstr(1, 20, str(li_dict))
-            # # calculate revenue
-            # for product, info in li_dict.items():
-            #     price = products_lib[product]["price"]
-            #     info["revenue"] = info["qty"] * price
-
             heading_string = "{0:<18}{1:<11}{2:<11}{3:<15}"
             row_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
             total_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
@@ -447,8 +431,6 @@ try:
             self.screen.addstr(row, 40, "*" * 55)
             row += 1
 
-            ######
-            # Begin Chase pop report
             for report_row in report_list:
                 # limit display names/values
                 product_name = (report_row[0] if len(report_row[0]) <= 17 else report_row[0][:14] + "...") + " "
@@ -476,55 +458,6 @@ try:
             else:
                 self.unlogged_in_menu()
 
-            ######
-
-            # order_list, customer_list, revenue_list = [], [], []
-            # for product, info in li_dict.items():
-            #     # set product names
-            #     product_name = products_lib[product]['name']
-            #     order = info["qty"]
-            #     customers = info["customers"]
-            #     revenue = info["revenue"]
-
-            #     # add values to lists (to be used in totals calculation)
-            #     order_list.append(order)
-            #     customer_list.append(customer)
-            #     revenue_list.append(revenue)
-
-            #     # limit display names/values
-            #     product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
-            #     order = (str(order) if len(str(order)) <= 11 else str(order[:8]) + "...") + " "
-            #     customers = (len(customers) if len(customers) <= 11 else len(customers)[:8] + "...")
-            #     revenue = (str(revenue) if len(str(revenue)) <= 14 else str(revenue[:11]) + "...")
-
-            #     # print product info
-            #     self.screen.addstr(row, 40, row_string.format(product_name, order, customers, revenue))
-            #     # print(row_string.format(product_name, order, customers, revenue))
-            #     row += 1
-            # self.screen.addstr(row, 40, "*" * 55)
-            # # print("*" * 55)
-
-            # # calculate totals
-            # order_sum = sum(order_list)
-            # customer_sum = len(total_customers)
-            # revenue_sum = sum(revenue_list)
-
-            # # limit totals display
-            # order_sum = (str(order_sum) if len(str(order_sum)) <= 17 else str(order_sum[:14]) + "...") + " "
-            # customer_sum = (str(customer_sum) if len(str(customer_sum)) <= 11 else str(customer_sum[:8]) + "...")
-            # revenue_sum = (str(revenue_sum) if len(str(revenue_sum)) <= 14 else str(revenue_sum[:11]) + "...")
-
-            # # print totals
-            # row += 1
-            # self.screen.addstr(row, 40, total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
-            # # print(total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
-            # row += 1
-            # self.screen.addstr(row, 40, "press any key to continue")
-            # choice = chr(self.screen.getch())
-            # if self.current_user is not None:
-            #     self.logged_in_menu()
-            # else:
-            #     self.unlogged_in_menu()
 
     if __name__ == '__main__':
         # Meow().print_hey()
