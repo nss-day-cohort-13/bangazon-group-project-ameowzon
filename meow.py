@@ -19,6 +19,7 @@ try:
             # init curses
             self.screen = curses.initscr()
             self.current_user = None
+            self.cart_id = None
             self.unlogged_in_menu()
 
         def unlogged_in_menu(self):
@@ -61,12 +62,11 @@ try:
             except ValueError:
                 self.unlogged_in_menu()
 
-        def logged_in_menu(self):
+        def logged_in_menu(self, name):
             # print the logged-in menu options.
             # request input.
             # based on input, do:
-            customer_info = get_value("data/customers.txt", self.current_user)
-            name = customer_info.name
+
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(10, 40, "Welcome " + name + "!")
@@ -131,25 +131,35 @@ try:
 
             self.screen.clear()
             self.screen.border(0)
-
-            row = 12
-            for index, user_id in user_lib.items():
-                user = get_value('data/customers.txt', user_id)
-                self.screen.addstr(row, 40, '{0}. {1}'.format(index, user.name))
-                row += 1
-            self.screen.addstr((row + 1), 40, '')
+            self.screen.addstr(11, 40, "'q to quit, b to go back.")
+            user_list = print_menu(generate_customer_menu, self.screen, 12)
             self.screen.refresh()
 
-            try:
-                choice = int(chr(self.screen.getch()))
-                self.set_user(user_lib[choice])
-                self.logged_in_menu()
-
-            except ValueError:
-                self.user_menu()
-
-            except IndexError:
-                self.user_menu()
+            choice = (chr(self.screen.getch()))
+            if choice == "b":
+                self.unlogged_in_menu()
+            elif choice == "q":
+                self.quit_menu(self.user_menu)
+            else:
+                try:
+                    choice = int(choice)
+                except ValueError:
+                    self.user_menu()
+                except TypeError:
+                    self.user_menu()
+                finally:
+                    try:
+                        user_uid = set_thing(user_list, choice)
+                        name = get_customer_name(user_uid)
+                    except TypeError:
+                        self.user_menu()
+                    # except IndexError:
+                    #     self.user_menu()
+                    # except ValueError:
+                    #     self.user_menu()
+                    finally:
+                        self.set_user(user_uid)
+                        self.logged_in_menu(name)
 
         def create_new_user(self):
             # request input for all the things.
@@ -297,43 +307,47 @@ try:
 
         def view_cart(self):
             """
-            Displays the content of the currently logged in user
-
-            Args- None
+            Displays the cart of the currently logged in user. Handles what to say if the user does not have a cart or if their cart is empty.
+            ========
+            Method Arguments: None
             """
-            # get the user object of the currently logged in user
-            current_user_obj = get_value("data/customers.txt", self.current_user)
-            # get that users cart
-            cart = current_user_obj.cart
-            # check if cart is not empty
-            if cart == {}:
+
+            # check if user has a cart.
+            self.cart_id = check_if_cart_exists(self.current_user)
+            if self.cart_id is None:
+                # if they don't have a cart, create one and print "your cart is empty, start shopping"
+                new_order(self.current_user)
                 self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
-                # format for columns
-                row_string = "{0:<18}{1:<11}${2:<14}"
-                total_string = "{0:<29}${1:<14}"
-                heading_string = "{0:<29}{1:<14}"
-                total_list = []
-                row = 18
-                self.screen.addstr(row, 40, heading_string.format("Your cart:", "Totals:"))
-                row += 1
-                self.screen.addstr(row, 40, "*" * 44)
-                row += 1
-                # loop over cart items and calculate total (grab price from 'products.txt')
-                for prod_id, qty in cart.items():
-                    product_dict = get_value("data/products.txt", prod_id)
-                    total = qty * product_dict["price"]
-                    # append total to list of totals (for amount due calculation)
-                    total_list.append(total)
-                    # limit product name
-                    product_name = product_dict["name"]
-                    product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
-                    self.screen.addstr(row, 40, row_string.format(product_name, qty, total))
+                cart_to_print = build_cart_view(self.cart_id)
+                # if they have a cart, check if cart is not empty.
+                if len(cart_to_print) == 0:
+                    self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
+                else:
+                    # if it's not empty, print it.
+                    # format for columns
+                    row_string = "{0:<18}{1:<11}${2:<14}"
+                    total_string = "{0:<29}${1:<14}"
+                    heading_string = "{0:<29}{1:<14}"
+                    total_list = []
+                    row = 18
+                    self.screen.addstr(row, 40, heading_string.format("Your cart:", "Totals:"))
                     row += 1
-                self.screen.addstr(row, 40, "*" * 44)
-                row += 1
-                # self.screen.addstr out total amount due
-                self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
+                    self.screen.addstr(row, 40, "*" * 44)
+                    row += 1
+                    # loop over cart items and calculate total (grab price from 'products.txt')
+                    for index, item in cart_to_print:
+                        # append total to list of totals (for amount due calculation)
+                        total_list.append(item[2])
+                        # limit product name
+                        product_name = (item[0] if len(item[0]) <= 17 else item[0][:14] + "...") + " "
+                        # print
+                        self.screen.addstr(row, 40, row_string.format(product_name, item[1], item[2]))
+                        row += 1
+                    self.screen.addstr(row, 40, "*" * 44)
+                    row += 1
+                    # self.screen.addstr out total amount due
+                    self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
 
         def convert_to_completed(self, payment_uid):
             # grab user name top-level variable.
