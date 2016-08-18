@@ -46,3 +46,10 @@ def check_if_cart_exists(customer_id):
                 return cart[0]
             except:
                 return None
+
+def clear_cart(cart_id):
+    with sqlite3.connect("bangazon.db") as database:
+        db = database.cursor()
+
+        db.execute("""DELETE FROM LineItem
+                        WHERE LineItem.orderId = ?""", (cart_id,))
