@@ -530,9 +530,7 @@ try:
             self.screen.addstr(6, 40, "Order complete. Press any key to continue")
             row = 8
             total = 0
-            ###########
-            # self.screen.addstr(row, 40, "result = {0}".format(result))
-            ###########
+
             for entry in result:
                 self.screen.addstr(row, 40, "{0} - {1}".format(entry[1], entry[2]))
                 total += int(entry[2])
