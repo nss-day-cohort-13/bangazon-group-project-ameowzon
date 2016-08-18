@@ -353,6 +353,7 @@ try:
         def convert_to_completed(self, payment_uid):
             # add payment id to customers open order, direct to logged-in menu
             add_payment_to_order(self.current_user, payment_uid)
+            self.cart_id = None
             self.logged_in_menu()
 
         def payment_options_menu(self, completing=False):
