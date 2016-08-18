@@ -19,6 +19,7 @@ try:
             # init curses
             self.screen = curses.initscr()
             self.current_user = None
+            self.cart_id = None
             self.unlogged_in_menu()
 
         def unlogged_in_menu(self):
@@ -61,11 +62,10 @@ try:
             except ValueError:
                 self.unlogged_in_menu()
 
-        def logged_in_menu(self):
+        def logged_in_menu(self, name):
             # print the logged-in menu options.
             # request input.
             # based on input, do:
-            name = get_customer_name(self.current_user)
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(10, 40, "Welcome " + name + "!")
@@ -128,21 +128,35 @@ try:
             # request input for which user.
             self.screen.clear()
             self.screen.border(0)
-
+            self.screen.addstr(11, 40, "'q to quit, b to go back.")
             user_list = print_menu(generate_customer_menu, self.screen, 12)
             self.screen.refresh()
 
-            try:
-                choice = int(chr(self.screen.getch()))
-                user_uid = set_thing(user_list, choice)
-                self.set_user(user_uid)
-                self.logged_in_menu()
-
-            except ValueError:
-                self.user_menu()
-
-            except IndexError:
-                self.user_menu()
+            choice = (chr(self.screen.getch()))
+            if choice == "b":
+                self.unlogged_in_menu()
+            elif choice == "q":
+                self.quit_menu(self.user_menu)
+            else:
+                try:
+                    choice = int(choice)
+                except ValueError:
+                    self.user_menu()
+                except TypeError:
+                    self.user_menu()
+                finally:
+                    try:
+                        user_uid = set_thing(user_list, choice)
+                        name = get_customer_name(user_uid)
+                    except TypeError:
+                        self.user_menu()
+                    # except IndexError:
+                    #     self.user_menu()
+                    # except ValueError:
+                    #     self.user_menu()
+                    finally:
+                        self.set_user(user_uid)
+                        self.logged_in_menu(name)
 
         def create_new_user(self):
             # request input for all the things.
@@ -294,13 +308,13 @@ try:
             """
 
             # check if user has a cart.
-            cart_id = check_if_cart_exists(self.current_user)
-            if cart_id is None:
+            self.cart_id = check_if_cart_exists(self.current_user)
+            if self.cart_id is None:
                 # if they don't have a cart, create one and print "your cart is empty, start shopping"
                 new_order(self.current_user)
                 self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
-                cart_to_print = build_cart_view
+                cart_to_print = build_cart_view(self.cart_id)
                 # if they have a cart, check if cart is not empty.
                 if len(cart_to_print) == 0:
                     self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
