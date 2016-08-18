@@ -217,7 +217,7 @@ try:
                 # view your cart or note that it's empty.
                 self.screen.addstr(row, 22, "Press the number of the item you'd like to add to your cart.")
                 row += 1
-                self.screen.addstr(row, 22, "Or press'c' to check out, 'b' to go back, 'x' to exit.")
+                self.screen.addstr(row, 22, "Or press'c' to check out, 'l' to clear cart, b' to go back, 'x' to exit.")
                 row += 2
                 self.view_cart(row)
 
@@ -232,7 +232,9 @@ try:
 
                     elif next_step == "c":  # Check Out.
                         self.payment_options_menu(completing=True)
-
+                    elif next_step == "l": #clear cart
+                        clear_cart(self.cart_id)
+                        self.shop_menu()
                     else:
                         self.screen.addstr(row, 40, next_step)
                         row += 1
@@ -282,7 +284,7 @@ try:
             self.screen.addstr(row, 22, "how many " + product_name + "'s would you like to add?")
             # print("how many" + prod_id["name"] + "s would you like to add?")
             row += 1
-            self.screen.addstr(row, 22, "'b' to go back, 'x' to exit.")
+            self.screen.addstr(row, 22, "'b' to go back, 'x' to exit")
             # print("'b' to go back, 'x' to exit.")
             # quantity = input(">> ")
             quantity = chr(self.screen.getch())

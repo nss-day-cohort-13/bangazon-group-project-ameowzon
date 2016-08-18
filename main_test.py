@@ -24,8 +24,9 @@ class test_product(unittest.TestCase):
         self.assertIsInstance(product_list[0][2], int)
 
     def test_get_product_from_db(self):
-        # HELP
-        pass
+        thing = get_product_from_db(1)
+        self.assertIsInstance(thing, str)
+        self.assertEqual(thing, "Sheer Kahn")
 
 
 class test_customer(unittest.TestCase):
@@ -78,11 +79,17 @@ class test_cart_handler(unittest.TestCase):
         self.assertIsInstance(thing, int)
 
     def test_build_cart_view(self):
-
-        pass
-
-    def test_delete_cart(self):
-        pass
+        order_num = new_order(1)
+        generate_new_line_item(order_num, 2)
+        generate_new_line_item(order_num, 5)
+        thing = build_cart_view(order_num)
+        self.assertIsInstance(thing, list)
+        self.assertIsInstance(thing[0], tuple)
+        self.assertNotEqual(len(thing), 0)
+        self.assertEqual(len(thing[0]), 3)
+        self.assertIsInstance(thing[0][0], str)
+        self.assertIsInstance(thing[0][1], int)
+        self.assertIsInstance(thing[0][2], int)
 
 
 class test_order(unittest.TestCase):

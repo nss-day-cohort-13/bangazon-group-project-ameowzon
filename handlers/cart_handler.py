@@ -2,28 +2,6 @@ from utility.utility import *
 import sqlite3
 
 
-def delete_cart(customer_id):
-    """
-    Deletes all the line item rows associated with the orderID of the unpaid order associated with the current customer.
-    =========
-    Method Argument: the ID of the current customer.
-    Returns: an empty list, so if the customer is currently shopping they can see the 'cart is empty' message.
-    """
-    with sqlite3.connect("bangazon.db") as database:
-        db = database.cursor()
-
-        db.execute("""DELETE li.*
-                        FROM LineItem li,
-                            (SELECT o.orderId currentOrder
-                            FROM orders o
-                            INNER JOIN customer c ON c.CustomerId = o.CustomerId
-                            WHERE c.CustomerId = ?
-                            AND o.PaymentID = Null) cart
-                        WHERE cart.currentOrder = li.orderId""", (customer_id,))
-        database.commit()
-        return []
-
-
 def build_cart_view(order_id):
     """
     Queries the bangazon database to find:
@@ -68,3 +46,10 @@ def check_if_cart_exists(customer_id):
                 return cart[0]
             except:
                 return None
+
+def clear_cart(cart_id):
+    with sqlite3.connect("bangazon.db") as database:
+        db = database.cursor()
+
+        db.execute("""DELETE FROM LineItem
+                        WHERE LineItem.orderId = ?""", (cart_id,))
