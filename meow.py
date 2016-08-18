@@ -6,6 +6,7 @@ from handlers.order_handler import *
 from handlers.payment_handler import *
 from handlers.product_handler import *
 from handlers.cart_handler import *
+from handlers.admin_handler import *
 
 import curses
 
@@ -32,7 +33,8 @@ try:
             self.screen.addstr(14, 40, "3. View available products")
             self.screen.addstr(15, 40, "4. Generate report")
             self.screen.addstr(16, 40, "5. Exit")
-            self.screen.addstr(18, 40, '')
+            self.screen.addstr(18, 40, "6. Admin login")
+            self.screen.addstr(20, 40, '')
             self.screen.refresh()
 
             try:
@@ -54,6 +56,10 @@ try:
 
                 elif (choice == 5):  # Exit
                     self.quit_menu(self.unlogged_in_menu)
+
+                elif (choice == 6):
+                    self.verify_admin_menu()
+
                 else:
                     self.unlogged_in_menu()
 
@@ -209,14 +215,14 @@ try:
             row += 2
             if self.current_user is not None:
                 # view your cart or note that it's empty.
-                self.view_cart()
                 self.screen.addstr(row, 22, "Press the number of the item you'd like to add to your cart.")
                 row += 1
                 self.screen.addstr(row, 22, "Or press'c' to check out, 'b' to go back, 'x' to exit.")
-                row += 1
+                row += 2
+                self.view_cart(row)
 
                 try:
-                    next_step = chr(self.screen.getch())
+                    next_step = bytes.decode(self.screen.getstr(15, 40, 60))
                     row += 1
                     if next_step == "x":  # Exit.
                         self.quit_menu(self.shop_menu)
@@ -250,7 +256,8 @@ try:
             else:
                 # if you're not logged in you can view products, but you can't do anything with a cart.
                 self.screen.addstr(row, 40, "You are not logged in.")
-                self.screen.addstr(row + 1, 12, "Press 'b' to go back and choose a login option, or x to exit.")
+                row += 1
+                self.screen.addstr(row, 12, "Press 'b' to go back and choose a login option, or x to exit.")
 
                 next_step = chr(self.screen.getch())
 
@@ -305,7 +312,7 @@ try:
                     # print(quantity + item_to_add["name"] + " added to cart.")
                     # self.shop_menu()
 
-        def view_cart(self):
+        def view_cart(self, row_start):
             """
             Displays the cart of the currently logged in user. Handles what to say if the user does not have a cart or if their cart is empty.
             ========
@@ -320,12 +327,14 @@ try:
             if self.cart_id is None:
                 # if they don't have a cart, create one and print "your cart is empty, start shopping"
                 self.cart_id = new_order(self.current_user)
-                self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
+                self.screen.addstr(row_start, 40, "Your cart is empty. Start shopping!")
+                row_start += 1
             else:
                 cart_to_print = build_cart_view(self.cart_id)
                 # if they have a cart, check if cart is not empty.
                 if len(cart_to_print) == 0:
-                    self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
+                    self.screen.addstr(row_start, 40, "Your cart is empty. Start shopping!")
+                    row_start += 1
                 else:
                     # if it's not empty, print it.
                     # format for columns
@@ -333,11 +342,10 @@ try:
                     total_string = "{0:<29}${1:<14}"
                     heading_string = "{0:<29}{1:<14}"
                     total_list = []
-                    row = 18
-                    self.screen.addstr(row, 40, heading_string.format("Your cart:", "Totals:"))
-                    row += 1
-                    self.screen.addstr(row, 40, "*" * 44)
-                    row += 1
+                    self.screen.addstr(row_start, 40, heading_string.format("Your cart:", "Totals:"))
+                    row_start += 1
+                    self.screen.addstr(row_start, 40, "*" * 44)
+                    row_start += 1
                     # loop over cart items and calculate total (grab price from 'products.txt')
                     for item in cart_to_print:
                         # append total to list of totals (for amount due calculation)
@@ -345,12 +353,12 @@ try:
                         # limit product name
                         product_name = (item[0] if len(item[0]) <= 17 else item[0][:14] + "...") + " "
                         # print
-                        self.screen.addstr(row, 40, row_string.format(product_name, item[1], item[2]))
-                        row += 1
-                    self.screen.addstr(row, 40, "*" * 44)
-                    row += 1
+                        self.screen.addstr(row_start, 40, row_string.format(product_name, item[1], item[2]))
+                        row_start += 1
+                    self.screen.addstr(row_start, 40, "*" * 44)
+                    row_start += 1
                     # self.screen.addstr out total amount due
-                    self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
+                    self.screen.addstr(row_start, 40, total_string.format("Order total:", sum(total_list)))
 
         def convert_to_completed(self, payment_uid):
             # add payment id to customers open order, direct to logged-in menu
@@ -477,6 +485,80 @@ try:
                 self.logged_in_menu()
             else:
                 self.unlogged_in_menu()
+
+        def verify_admin_menu(self):
+            """
+            Login verification for admin privileges
+            """
+            admin_id = get_param('What is your admin ID?', self.screen)
+            password = get_param('What is your password?', self.screen)
+
+            admin = verify_admin(admin_id, password)
+
+            if admin:
+                self.screen.clear()
+                self.screen.border(0)
+                self.screen.addstr(12, 40, 'Logged in successfully as admin.')
+                self.screen.addstr(13, 40, 'Press any key to continue.')
+                self.screen.refresh()
+
+                pause = chr(self.screen.getch())
+                self.admin_menu()
+            else:
+                self.screen.clear()
+                self.screen.border(0)
+                self.screen.addstr(12, 40, 'Admin login failed.')
+                self.screen.addstr(13, 40, 'Press any key to continue.')
+                self.screen.refresh()
+
+                pause = chr(self.screen.getch())
+                self.unlogged_in_menu()
+
+        def admin_menu(self):
+            """
+            Menu for admin privileges
+            """
+            self.screen.clear()
+            self.screen.border(0)
+            self.screen.addstr(12, 40, '1. Add new product')
+            self.screen.addstr(13, 40, '2. Logout admin')
+            self.screen.refresh()
+
+            choice = str(chr(self.screen.getch()))
+
+            if choice == '1':
+                name = get_param('What is the name of the product?', self.screen)
+                price = int(get_param('What is the price of the product?', self.screen))
+
+                success = add_new_product(name, price)
+
+                if success:
+                    self.screen.clear()
+                    self.screen.border(0)
+                    self.screen.addstr(12, 40, 'Product added successfully!')
+                    self.screen.addstr(13, 40, 'Press any key to continue.')
+
+                    pause = chr(self.screen.getch())
+                    self.admin_menu()
+
+                else:
+                    self.screen.clear()
+                    self.screen.border(0)
+                    self.screen.addstr(12, 40, 'There was a problem adding that product.')
+                    self.screen.addstr(13, 40, 'Press any key to continue.')
+
+                    pause = chr(self.screen.getch())
+                    self.admin_menu()
+
+            elif choice == '2':
+                self.screen.clear()
+                self.screen.border(0)
+                self.screen.addstr(12, 40, 'Logged out admin.')
+                self.screen.addstr(13, 40, 'Press any key to continue.')
+
+                pause = chr(self.screen.getch())
+                self.unlogged_in_menu()
+
 
         def show_purchased_menu(self):
             """

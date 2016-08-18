@@ -35,3 +35,29 @@ def get_product_from_db(prod_id, input_file='bangazon.db'):
         db.execute("SELECT p.Name FROM Product p WHERE p.ProductId=?", [prod_id])
         product_name = db.fetchone()
         return product_name[0]
+
+
+def add_new_product(name, price):
+    """
+    If logged in as admin, add new product to product table
+    ============
+    Method Arguments:
+    name - the name of the product to be added
+    price - the price of the product to be added
+    """
+    try:
+        with sqlite3.connect('bangazon.db') as conn:
+            db = conn.cursor()
+
+            db.execute("""
+INSERT INTO Product
+    (Name, Price)
+VALUES
+    (?, ?)
+                """, (name, price))
+
+            conn.commit()
+        return True
+
+    except sqlite3.OperationalError:
+        return False
