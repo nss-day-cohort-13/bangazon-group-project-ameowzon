@@ -27,7 +27,20 @@ def return_report_line_items(input_file='bangazon.db'):
 
     with sqlite3.connect(input_file) as conn:
         db = conn.cursor()
-        db.execute("SELECT li.* FROM LineItem li, Orders o WHERE li.OrderID == o.OrderID AND o.PaymentID != NULL")
+        db.execute("""
+SELECT
+    p.ProductId,
+    p.Name,
+    COUNT(p.ProductId) 'Units Sold',
+    COUNT(DISTINCT c.CustomerId) 'Customers',
+    SUM(p.Price) 'Revenue'
+FROM Product p
+INNER JOIN LineItem l ON l.ProductId = p.ProductId
+INNER JOIN Orders o ON l.OrderId = o.OrderId
+INNER JOIN Customer c ON o.CustomerId = c.CustomerId
+WHERE o.PaymentId IS NOT NULL
+GROUP BY p.ProductId
+            """)
         db.commit()
 
     return db.fetchall()
