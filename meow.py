@@ -6,11 +6,6 @@ from handlers.payment_handler import *
 from handlers.product_handler import *
 from handlers.cart_handler import *
 
-from objects.customer_object import *
-from objects.line_item_object import *
-from objects.order_object import *
-from objects.payment_object import *
-
 import curses
 
 try:
@@ -19,16 +14,17 @@ try:
             # init curses
             self.screen = curses.initscr()
             self.current_user = None
+            self.user_name = ""
             self.cart_id = None
             self.unlogged_in_menu()
 
         def unlogged_in_menu(self):
-
-            # 1. log in to a user (user_menu)
-            # 2. create a new user (create_new_user)
-            # 3. view available products (shop_menu)
-            # 4. generate report (generate_popularity_report)
-            # 5. exit.
+            """
+            Prints top-level menu options for a unlogged-in user, and requests next-step input. Based on the input, continues to the next menu.
+            Menu options: 1. log in to an existing user (new user menu). 2. create a new user (new user menu). 3. view available products (shop menu). 4. view popularity report. 5. exit.
+            ========
+            Method Arguments: None
+            """
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(12, 40, "1. Log in to a user")
@@ -41,7 +37,9 @@ try:
 
             try:
                 choice = int(chr(self.screen.getch()))
-
+            except ValueError:
+                self.unlogged_in_menu()
+            finally:
                 if (choice == 1):  # Log in
                     self.user_menu()
 
@@ -59,16 +57,16 @@ try:
                 else:
                     self.unlogged_in_menu()
 
-            except ValueError:
-                self.unlogged_in_menu()
-
-        def logged_in_menu(self, name):
-            # print the logged-in menu options.
-            # request input.
-            # based on input, do:
+        def logged_in_menu(self):
+            """
+            Prints top-level menu options for a logged-in user, and requests next-step input. Based on the input, continues to the next menu.
+            Menu options: 1. log out and return to unlogged in menu. 2. shop (go to shop menu). 3. view payment options menu. 4. view popularity report. 5. exit.
+            ========
+            Method Arguments: None
+            """
             self.screen.clear()
             self.screen.border(0)
-            self.screen.addstr(10, 40, "Welcome " + name + "!")
+            self.screen.addstr(10, 40, "Welcome " + self.user_name + "!")
             self.screen.addstr(11, 40, "")
             self.screen.addstr(12, 40, '1. Log out')
             self.screen.addstr(13, 40, '2. Shop')
@@ -80,7 +78,9 @@ try:
 
             try:
                 choice = int(chr(self.screen.getch()))
-
+            except ValueError:
+                self.logged_in_menu()
+            finally:
                 if choice == 1:
                     self.reset_user()
                     self.unlogged_in_menu()
@@ -96,11 +96,15 @@ try:
 
                 elif choice == 5:
                     self.quit_menu(self.logged_in_menu)
-
-            except ValueError:
-                self.logged_in_menu()
+                else:
+                    self.logged_in_menu()
 
         def quit_menu(self, back_to_menu):
+            """
+            This function is called if the user enters 'quit' input in any other menu. Asks the user if they really want to quit, and based on their final input, either quits or goes back to the previous menu.
+            ========
+            Method argument: the name of the function to go back to if the user changes their mind about quitting.
+            """
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(12, 40, 'Are you sure you want to exit? [ y / n ]')
@@ -109,7 +113,6 @@ try:
 
             try:
                 choice = chr(self.screen.getch())
-
                 if choice.lower() == 'y':
                     curses.endwin()
                     quit()
@@ -118,14 +121,15 @@ try:
                         self.unlogged_in_menu()
                     else:
                         back_to_menu()
-
             except ValueError:
                 back_to_menu()
 
         def user_menu(self):
-            # generate the customer menu.
-            # for each customer item, use get_value to print the name value.
-            # request input for which user.
+            """
+            Prints the list of users currently created, and requests input from the user for whether they'd like to choose one of the options to log into, or go back.
+            ========
+            Method Arguments: None
+            """
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(11, 40, "'q to quit, b to go back.")
@@ -146,23 +150,21 @@ try:
                     self.user_menu()
                 finally:
                     try:
-                        user_uid = set_thing(user_list, choice)
-                        name = get_customer_name(user_uid)
+                        self.current_user = set_thing(user_list, choice)
+                        self.user_name = get_customer_name(self.current_user)
                     except TypeError:
                         self.user_menu()
-                    # except IndexError:
-                    #     self.user_menu()
-                    # except ValueError:
-                    #     self.user_menu()
+                    except IndexError:
+                        self.user_menu()
                     finally:
-                        self.set_user(user_uid)
-                        self.logged_in_menu(name)
+                        self.logged_in_menu()
 
         def create_new_user(self):
-            # request input for all the things.
-            # pass all the input into the create_new_user.
-            # set the current user to the UID that returns,
-            # then print the logged in menu.
+            """
+            Requests input for each of the parameters required to create a new user (name, address, city, state, zip, and phone). Passes the information into generate_new_customer and receives the UID back, which it sets to the current user. Sets the user_name top-level variable (which is printed as a greeting in the logged in menu) and directs to the logged in menu.
+            ========
+            Method Arguments: none
+            """
             name = get_param('What is your name?', self.screen)
             address = get_param('What is your street address?', self.screen)
             city = get_param('What city do you live in?', self.screen)
@@ -171,32 +173,32 @@ try:
             phone = get_param('What is your phone number?', self.screen)
 
             try:
-                new_uid = generate_new_customer('data/customers.txt', name, address, city, state, zipcode, phone)
-                self.set_user(new_uid)
+                self.current_user = generate_new_customer(name, address, city, state, zipcode, phone)
+                self.user_name = name
                 self.logged_in_menu()
             except:
                 self.unlogged_in_menu()
 
-        def set_user(self, user_id):
-            # set user ID to current user.
-            self.current_user = user_id
-
         def reset_user(self):
-            # set current user to none. that's it.
+            """
+            Sets current user to none as part of logging out.
+            ========
+            Method Arguments: None
+            """
             self.current_user = None
 
         def shop_menu(self):
 
             """
-            This function prints a list of products and prices from products.txt, saved as a index-uid dictionary in a scoped product_menu variable.  Then it requests next_step input from the user. If the user is not logged in, the only subsequent options are to go back or exit. If the user is logged in, they have the option of adding an item to their cart (via product_menu) or completing their order via payment_options_menu.
+            Prints a list of products and prices from the products table in bangazon.db. Then requests next_step input from the user. If the user is not logged in, the only subsequent options are to go back or exit. If the user is logged in, their cart prints via view_cart, and they have the option of adding an item to their cart (via product_menu) or completing their order via payment_options_menu.
             ==========
             Method Arguments: none.
             """
-            # load_product_library and for each available product index, get_value to print the name and price.
             self.screen.clear()
             self.screen.border(0)
 
             row = 3
+            # load_product_library and for each available product index, get_value to print the name and price.
             product_list = print_menu(read_product_from_db, self.screen, row)
             row += len(product_list)
 
