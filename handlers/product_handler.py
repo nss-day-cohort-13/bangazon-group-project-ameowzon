@@ -51,3 +51,29 @@ def generate_product_list(file_name):
         item_menu[index] = key
         index += 1
     return item_menu
+
+
+def add_new_product(name, price):
+    """
+    If logged in as admin, add new product to product table
+    ============
+    Method Arguments:
+    name - the name of the product to be added
+    price - the price of the product to be added
+    """
+    try:
+        with sqlite3.connect('bangazon.db') as conn:
+            db = conn.cursor()
+
+            db.execute("""
+INSERT INTO Product
+    (Name, Price)
+VALUES
+    (?, ?)
+                """, (name, price))
+
+            conn.commit()
+        return True
+
+    except sqlite3.OperationalError:
+        return False
