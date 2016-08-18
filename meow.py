@@ -494,8 +494,22 @@ try:
             admin = verify_admin(admin_id, password)
 
             if admin:
+                self.screen.clear()
+                self.screen.border(0)
+                self.screen.addstr(12, 40, 'Logged in successfully as admin.')
+                self.screen.addstr(13, 40, 'Press any key to continue.')
+                self.screen.refresh()
+
+                pause = chr(self.screen.getch())
                 self.admin_menu()
             else:
+                self.screen.clear()
+                self.screen.border(0)
+                self.screen.addstr(12, 40, 'Admin login failed.')
+                self.screen.addstr(13, 40, 'Press any key to continue.')
+                self.screen.refresh()
+
+                pause = chr(self.screen.getch())
                 self.unlogged_in_menu()
 
         def admin_menu(self):
@@ -504,10 +518,24 @@ try:
             """
             self.screen.clear()
             self.screen.border(0)
-            self.screen.addstr(12, 40, 'Logged in successfully as admin. Press any key to exit.')
+            self.screen.addstr(12, 40, '1. Add new product')
+            self.screen.addstr(13, 40, '2. Logout admin')
             self.screen.refresh()
 
-            pause = chr(self.screen.getch())
+            choice = str(chr(self.screen.getch()))
+
+            if choice == '1':
+                pass
+
+            elif choice == '2':
+                self.screen.clear()
+                self.screen.border(0)
+                self.screen.addstr(12, 40, 'Logged out admin.')
+                self.screen.addstr(13, 40, 'Press any key to continue.')
+
+                pause = chr(self.screen.getch())
+                self.unlogged_in_menu()
+
 
 
     if __name__ == '__main__':
