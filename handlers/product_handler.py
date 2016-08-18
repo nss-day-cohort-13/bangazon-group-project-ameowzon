@@ -24,17 +24,6 @@ def read_product_from_db(input_file='bangazon.db'):
             return db.fetchall(), True
 
 
-def load_temp_product(file_name):
-    """
-    Loads json text file and returns it. Takes filename as argument
-    ============
-    file_name - a string representing the path to the file to be loaded
-    """
-
-    tempDict = read_json_file("./data/products")
-    return tempDict
-
-
 def generate_product_list(file_name):
     """
     loads products file and generates a menu-ized dictionary for printing and setting.
