@@ -37,6 +37,7 @@ class test_customer(unittest.TestCase):
     def test_generate_new_customer(self):
         thing = generate_new_customer("Amy", "111 street", "nash", "Tn", "44444", "5555555")
         self.assertIsInstance(thing, int)
+        # clean up db
         with sqlite3.connect('bangazon.db') as conn:
             c = conn.cursor()
             c.execute("DELETE FROM Customer WHERE CustomerId=?", [thing])
