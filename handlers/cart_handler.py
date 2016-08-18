@@ -33,7 +33,6 @@ def build_cart_view(order_id):
     Method Argument: the ID of the current order.
     Returns: list of tuples
     """
-
     with sqlite3.connect("bangazon.db") as database:
             db = database.cursor()
 
@@ -42,7 +41,7 @@ def build_cart_view(order_id):
                             INNER JOIN
                                 (SELECT li.ProductId
                                 FROM LineItem li
-                                ON li.orderId = ?) cartItems
+                                WHERE li.orderId = ?) cartItems
                             ON p.ProductId = cartItems.productId
                             GROUP BY p.ProductId""", (order_id,))
             return db.fetchall()
@@ -60,8 +59,9 @@ def check_if_cart_exists(customer_id):
     with sqlite3.connect("bangazon.db") as database:
             db = database.cursor()
 
-            db.execute("""SELECT o.orderID
-                            FROM orders o
+            db.execute("""SELECT o.OrderID
+                            FROM Orders o
                             WHERE o.CustomerID = ?
-                            AND o.PaymentID = Null""", (customer_id,))
-            return db.fetchone()
+                            AND o.PaymentID IS NULL""", (customer_id,))
+            cart = db.fetchone()
+            return cart[0]

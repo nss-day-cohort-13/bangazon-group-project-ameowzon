@@ -97,6 +97,7 @@ try:
 
                 elif choice == 5:
                     self.quit_menu(self.logged_in_menu)
+
                 else:
                     self.logged_in_menu()
 
@@ -234,7 +235,7 @@ try:
                             self.shop_menu()
                         finally:
                             row += 2
-                            if next_step >= 0 and next_step < len(product_list):
+                            if next_step >= 0 and next_step <= len(product_list):
                                 prod_id = set_thing(product_list, next_step)
                                 self.add_to_cart_menu(prod_id)
                             else:
@@ -264,13 +265,13 @@ try:
             """
             Receives a unique id for a product to add to the current user's 'cart' property. To separate concerns from shop_menu, this function requests the quantity to add, and adds the item to the cart.
             ==========
-            Arguments: the string unique ID of one of the products in products.txt.
+            Arguments: product id
             """
             self.screen.clear()
             self.screen.border(0)
             row = 4
-            item_to_add = get_value("data/products.txt", prod_ID)
-            self.screen.addstr(row, 22, "how many " + item_to_add["name"] + "s would you like to add?")
+            product_name = get_product_from_db(prod_ID)
+            self.screen.addstr(row, 22, "how many " + product_name + "'s would you like to add?")
             # print("how many" + prod_id["name"] + "s would you like to add?")
             row += 1
             self.screen.addstr(row, 22, "'b' to go back, 'x' to exit.")
@@ -289,16 +290,16 @@ try:
                     # print("command not recognized.")
                     self.add_to_cart_menu(prod_ID)
                 finally:
-                    add_item_to_cart("data/customers.txt", self.current_user, prod_ID, quantity)
+                    # add (quantity) line items to open order (self.cart_id)
+                    for i in range(quantity):
+                        generate_new_line_item(self.cart_id, prod_ID)
                     row += 3
-                    self.screen.addstr(row, 40, str(quantity) + " " + item_to_add["name"] + " added to cart.")
+                    self.screen.addstr(row, 40, str(quantity) + " " + product_name + " added to cart.")
                     row += 3
                     self.screen.addstr(row, 40, "Press 'any key' to return to shopping menu.")
 
                     quantity = chr(self.screen.getch())
-
-                    if (quantity):
-                        self.shop_menu()
+                    self.shop_menu()
 
                     # print(quantity + item_to_add["name"] + " added to cart.")
                     # self.shop_menu()
@@ -311,10 +312,13 @@ try:
             """
 
             # check if user has a cart.
-            self.cart_id = check_if_cart_exists(self.current_user)
+            try:
+                self.cart_id = check_if_cart_exists(self.current_user)
+            except TypeError:
+                pass
             if self.cart_id is None:
                 # if they don't have a cart, create one and print "your cart is empty, start shopping"
-                new_order(self.current_user)
+                self.cart_id = new_order(self.current_user)
                 self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
             else:
                 cart_to_print = build_cart_view(self.cart_id)
@@ -334,7 +338,7 @@ try:
                     self.screen.addstr(row, 40, "*" * 44)
                     row += 1
                     # loop over cart items and calculate total (grab price from 'products.txt')
-                    for index, item in cart_to_print:
+                    for item in cart_to_print:
                         # append total to list of totals (for amount due calculation)
                         total_list.append(item[2])
                         # limit product name
@@ -348,19 +352,10 @@ try:
                     self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
 
         def convert_to_completed(self, payment_uid):
-            # grab user name top-level variable.
-            # generate a new order uid with that user name and the UID argument.
-            # for each cart item, for qty number of times, generate a line item with the product number and order number.
-            oid = new_order(self.current_user, payment_uid)
-            current_user_obj = get_value("data/customers.txt", self.current_user)
-            cart = current_user_obj.cart
-
-            for prod_id, qty in cart.items():
-                while qty > 0:
-                    generate_new_line_item('data/line_items.txt', oid, prod_id)
-                    qty -= 1
-            delete_cart('data/customers.txt', self.current_user)
-            self.logged_in_menu()
+            # add payment id to customers open order, direct to logged-in menu
+            add_payment_to_order(self.current_user, payment_uid)
+            self.cart_id = None
+            self.show_purchased_menu()
 
         def payment_options_menu(self, completing=False):
             self.screen.clear()
@@ -412,7 +407,7 @@ try:
                     except ValueError:
                         self.payment_options_menu(completing=True)
                     finally:
-                        if next_step >= 0 and next_step < len(payment_list):
+                        if next_step >= 0 and next_step <= len(payment_list):
                             payment_uid = set_thing(payment_list, next_step)
                             self.convert_to_completed(payment_uid)
                         else:
@@ -425,7 +420,7 @@ try:
             self.screen.refresh()
             account_num = get_param("enter the account number.", self.screen)
             account_name = get_param("enter a nickname for this account.", self.screen)
-            generate_new_payment("data/payments.txt", account_name, account_num, self.current_user)
+            generate_new_payment(account_name, account_num, self.current_user)
 
         def generate_popularity_report(self):
             """
@@ -467,6 +462,8 @@ try:
             order_sum = (str(total_list[0][0]) if len(str(total_list[0][0])) <= 17 else str(total_list[0][0])[:14] + "...") + " "
             customer_sum = (str(total_list[0][1]) if len(str(total_list[0][1])) <= 11 else str(total_list[0][1])[:8] + "...")
             revenue_sum = (str(total_list[0][2]) if len(str(total_list[0][2])) <= 14 else str(total_list[0][2])[:11] + "...")
+            self.screen.addstr(row, 40, "*" * 55)
+            row += 1
             # add row to screen
             self.screen.addstr(row, 40, total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
             # increment row by 1
