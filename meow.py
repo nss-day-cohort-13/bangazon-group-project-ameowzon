@@ -214,11 +214,11 @@ try:
             row += 2
             if self.current_user is not None:
                 # view your cart or note that it's empty.
-                self.view_cart()
                 self.screen.addstr(row, 22, "Press the number of the item you'd like to add to your cart.")
                 row += 1
                 self.screen.addstr(row, 22, "Or press'c' to check out, 'b' to go back, 'x' to exit.")
-                row += 1
+                row += 2
+                self.view_cart(row)
 
                 try:
                     next_step = chr(self.screen.getch())
@@ -255,7 +255,8 @@ try:
             else:
                 # if you're not logged in you can view products, but you can't do anything with a cart.
                 self.screen.addstr(row, 40, "You are not logged in.")
-                self.screen.addstr(row + 1, 12, "Press 'b' to go back and choose a login option, or x to exit.")
+                row += 1
+                self.screen.addstr(row, 12, "Press 'b' to go back and choose a login option, or x to exit.")
 
                 next_step = chr(self.screen.getch())
 
@@ -310,7 +311,7 @@ try:
                     # print(quantity + item_to_add["name"] + " added to cart.")
                     # self.shop_menu()
 
-        def view_cart(self):
+        def view_cart(self, row_start):
             """
             Displays the cart of the currently logged in user. Handles what to say if the user does not have a cart or if their cart is empty.
             ========
@@ -325,12 +326,14 @@ try:
             if self.cart_id is None:
                 # if they don't have a cart, create one and print "your cart is empty, start shopping"
                 self.cart_id = new_order(self.current_user)
-                self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
+                self.screen.addstr(row_start, 40, "Your cart is empty. Start shopping!")
+                row_start += 1
             else:
                 cart_to_print = build_cart_view(self.cart_id)
                 # if they have a cart, check if cart is not empty.
                 if len(cart_to_print) == 0:
-                    self.screen.addstr(12, 40, "Your cart is empty. Start shopping!")
+                    self.screen.addstr(row_start, 40, "Your cart is empty. Start shopping!")
+                    row_start += 1
                 else:
                     # if it's not empty, print it.
                     # format for columns
@@ -338,11 +341,10 @@ try:
                     total_string = "{0:<29}${1:<14}"
                     heading_string = "{0:<29}{1:<14}"
                     total_list = []
-                    row = 18
-                    self.screen.addstr(row, 40, heading_string.format("Your cart:", "Totals:"))
-                    row += 1
-                    self.screen.addstr(row, 40, "*" * 44)
-                    row += 1
+                    self.screen.addstr(row_start, 40, heading_string.format("Your cart:", "Totals:"))
+                    row_start += 1
+                    self.screen.addstr(row_start, 40, "*" * 44)
+                    row_start += 1
                     # loop over cart items and calculate total (grab price from 'products.txt')
                     for item in cart_to_print:
                         # append total to list of totals (for amount due calculation)
@@ -350,12 +352,12 @@ try:
                         # limit product name
                         product_name = (item[0] if len(item[0]) <= 17 else item[0][:14] + "...") + " "
                         # print
-                        self.screen.addstr(row, 40, row_string.format(product_name, item[1], item[2]))
-                        row += 1
-                    self.screen.addstr(row, 40, "*" * 44)
-                    row += 1
+                        self.screen.addstr(row_start, 40, row_string.format(product_name, item[1], item[2]))
+                        row_start += 1
+                    self.screen.addstr(row_start, 40, "*" * 44)
+                    row_start += 1
                     # self.screen.addstr out total amount due
-                    self.screen.addstr(row, 40, total_string.format("Order total:", sum(total_list)))
+                    self.screen.addstr(row_start, 40, total_string.format("Order total:", sum(total_list)))
 
         def convert_to_completed(self, payment_uid):
             # add payment id to customers open order, direct to logged-in menu
