@@ -65,7 +65,8 @@ try:
             # print the logged-in menu options.
             # request input.
             # based on input, do:
-            name = get_customer_name(self.current_user)
+            customer_info = get_value("data/customers.txt", self.current_user)
+            name = customer_info.name
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(10, 40, "Welcome " + name + "!")
@@ -126,16 +127,22 @@ try:
             # generate the customer menu.
             # for each customer item, use get_value to print the name value.
             # request input for which user.
+            user_lib = generate_customer_menu('data/customers.txt')
+
             self.screen.clear()
             self.screen.border(0)
 
-            user_list = print_menu(generate_customer_menu, self.screen, 12)
+            row = 12
+            for index, user_id in user_lib.items():
+                user = get_value('data/customers.txt', user_id)
+                self.screen.addstr(row, 40, '{0}. {1}'.format(index, user.name))
+                row += 1
+            self.screen.addstr((row + 1), 40, '')
             self.screen.refresh()
 
             try:
                 choice = int(chr(self.screen.getch()))
-                user_uid = set_thing(user_list, choice)
-                self.set_user(user_uid)
+                self.set_user(user_lib[choice])
                 self.logged_in_menu()
 
             except ValueError:
@@ -183,9 +190,12 @@ try:
             self.screen.border(0)
 
             row = 3
-            product_list = print_menu(read_product_from_db, self.screen, row)
-            row += len(product_list)
-
+            product_menu = generate_product_list("data/products.txt")
+            for index, UID in product_menu.items():
+                info = get_value("data/products.txt", UID)
+                self.screen.border(0)
+                self.screen.addstr(row, 40, "{0}. {1}-- ${2}".format(index, info["name"], info["price"]))
+                row += 1
             # are you logged in or not?
             row += 2
             if self.current_user is not None:
@@ -217,9 +227,8 @@ try:
                             self.shop_menu()
                         finally:
                             row += 2
-                            if next_step >= 0 and next_step < len(product_list):
-                                prod_id = set_thing(product_list, next_step)
-                                self.add_to_cart_menu(prod_id)
+                            if next_step in product_menu.keys():
+                                self.add_to_cart_menu(product_menu[next_step])
                             else:
                                 # print("command not recognized.")
                                 self.screen.addstr(row, 40, "Command not recognized.")
@@ -343,19 +352,20 @@ try:
 
         def payment_options_menu(self, completing=False):
             self.screen.clear()
+            self.screen.addstr(3, 20, "your payment types:")
             self.screen.border(0)
-            self.screen.addstr(3, 20, "Your payment types:")
-
-            how_far_down = 5
-            payment_list = print_menu(generate_payments_menu, self.screen, how_far_down, cid=self.current_user)
-            how_far_down += len(payment_list)
-
+            how_far_down = 4
+            # pass user name top-level variable to generate_payment_list.
+            payment_options = generate_payments_menu("data/payments.txt", self.current_user)
             # for each payment id in payment_list, use get_value to print the name or something.
-            if len(payment_list) == 0:
-                self.screen.addstr(how_far_down, 40, "No payment types yet!")
+            if payment_options == {}:
+                self.screen.addstr(how_far_down, 40, "no payment types yet!")
                 how_far_down += 1
             else:
-                pass
+                for index, uid in payment_options.items():
+                    payment = get_value("data/payments.txt", uid)
+                    self.screen.addstr(how_far_down, 40, str(index) + ". " + payment.name)
+                    how_far_down += 1
 
             self.screen.addstr(how_far_down, 40, '')
             how_far_down += 1
@@ -374,7 +384,7 @@ try:
                 else:
                     self.payment_options_menu()
             elif completing is True:
-                self.screen.addstr(how_far_down, 40, "Press the number of the payment to use for this order.")
+                self.screen.addstr(how_far_down, 40, "press the number of the payment to use for this order.")
                 how_far_down += 1
                 self.screen.addstr(how_far_down, 40, "n to make a new payment. b to go back. x to exit.")
                 how_far_down += 1
@@ -391,9 +401,8 @@ try:
                     except ValueError:
                         self.payment_options_menu(completing=True)
                     finally:
-                        if next_step >= 0 and next_step < len(payment_list):
-                            payment_uid = set_thing(payment_list, next_step)
-                            self.convert_to_completed(payment_uid)
+                        if next_step in payment_options.keys():
+                            self.convert_to_completed(payment_options[next_step])
                         else:
                             self.payment_options_menu(True)
 
@@ -498,10 +507,34 @@ try:
             else:
                 self.unlogged_in_menu()
 
+        def show_purchased_menu(self):
+            """
+            Shows the most recently purchased items in a curses menu
+            """
+
+            self.screen.clear()
+            self.screen.border(0)
+            result = get_last_order_for_menu()
+            self.screen.addstr(6, 40, "Order complete. Press any key to continue")
+            row = 8
+            total = 0
+            ###########
+            # self.screen.addstr(row, 40, "result = {0}".format(result))
+            ###########
+            for entry in result:
+                self.screen.addstr(row, 40, "{0} - {1}".format(entry[1], entry[2]))
+                total += int(entry[2])
+                row += 1
+            row += 2
+            self.screen.addstr(row, 40, "Total = {0}".format(total))
+            pause = self.screen.getch()
+            return self.logged_in_menu()
+
     if __name__ == '__main__':
         # Meow().print_hey()
         # print_hello()
         # Meow().unlogged_in_menu()
+        # Meow().show_purchased_menu()
         Meow()
 
 except KeyboardInterrupt:
