@@ -1,4 +1,5 @@
 
+
 from handlers.customer_handler import *
 from handlers.line_item_handler import *
 from handlers.order_handler import *
@@ -478,6 +479,26 @@ try:
             else:
                 self.unlogged_in_menu()
 
+        def show_purchased_menu(self):
+            """
+            Shows the most recently purchased items in a curses menu
+            """
+
+            self.screen.clear()
+            self.screen.border(0)
+            result = get_last_order_for_menu()
+            self.screen.addstr(6, 40, "Order complete. Press any key to continue")
+            row = 8
+            total = 0
+
+            for entry in result:
+                self.screen.addstr(row, 40, "{0} - {1}".format(entry[1], entry[2]))
+                total += int(entry[2])
+                row += 1
+            row += 2
+            self.screen.addstr(row, 40, "Total = {0}".format(total))
+            pause = self.screen.getch()
+            return self.logged_in_menu()
 
     if __name__ == '__main__':
         # Meow().print_hey()
