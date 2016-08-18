@@ -15,6 +15,7 @@ class test_product(unittest.TestCase):
         self.assertIsInstance(thing, list)
         self.assertIsInstance(thing[0], tuple)
         self.assertNotEqual(len(thing), 0)
+        self.assertEqual(len(thing[0]), 3)
         self.assertIsInstance(thing[0][0], int)
         self.assertIsInstance(thing[0][1], str)
         self.assertIsInstance(thing[0][2], int)
@@ -26,11 +27,22 @@ class test_customer(unittest.TestCase):
         pass
 
     def test_get_customer_name(self):
-        pass
+        thing = get_customer_name(1)
+        self.assertIsInstance(thing, str)
+        thing2 = get_customer_name(600)
+        self.assertEqual(thing2, None)
+
 
     def test_generate_customer_menu(self):
-        pass
-
+        thing = generate_customer_menu()
+        user_list = thing[0]
+        self.assertEqual(thing[1], False)
+        self.assertIsInstance(user_list, list)
+        self.assertIsInstance(user_list[0], tuple)
+        self.assertNotEqual(len(user_list), 0)
+        self.assertEqual(len(user_list[0]), 2)
+        self.assertIsInstance(user_list[0][0], int)
+        self.assertIsInstance(user_list[0][1], str)
 
 class test_payment(unittest.TestCase):
 

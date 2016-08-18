@@ -36,7 +36,10 @@ def get_customer_name(customer_id):
                     FROM Customer c
                     WHERE c.CustomerId = ?""", [customer_id])
     thing = db.fetchone()
-    return thing[0]
+    try:
+        return thing[0]
+    except:
+        return None
 
 
 def generate_customer_menu():
