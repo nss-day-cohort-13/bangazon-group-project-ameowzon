@@ -11,10 +11,13 @@ def new_order(cust_key):
         c = conn.cursor()
         c.execute("INSERT INTO Orders (PaymentId, CustomerId) VALUES (?,?)", (None, cust_key))
         conn.commit()
-        c.execute("SELECT o.OrderId FROM Orders o WHERE o.CustomerId=? AND o.PaymentId=?", (cust_key, None))
-        order_id = c.fetchone()
-        print(order_id[0])
-        return order_id[0]
+        c.execute("""SELECT o.OrderId FROM Orders o
+            INNER JOIN Customer c ON c.CustomerId = o.CustomerId
+            WHERE c.CustomerId=?
+            AND o.PaymentId IS ?""", (cust_key, None))
+        cart_id = c.fetchone()
+        return cart_id[0]
+
 
 
 def add_payment_to_order(cust_key, payment_id):

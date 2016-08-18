@@ -38,11 +38,11 @@ def print_menu(handler_fn, screen, row_start, cid=None):
 
     if price:
         for item in temp_list:
-            screen.addstr(row_start, 40, '{0}. {1}-- ${2}'.format(temp_list.index(item), item[1], item[2]))
+            screen.addstr(row_start, 40, '{0}. {1}-- ${2}'.format((temp_list.index(item) + 1), item[1], item[2]))
             row_start += 1
     else:
         for item in temp_list:
-            screen.addstr(row_start, 40, '{0}. {1}'.format(temp_list.index(item), item[1]))
+            screen.addstr(row_start, 40, '{0}. {1}'.format((temp_list.index(item) + 1), item[1]))
             row_start += 1
 
     return temp_list
@@ -56,6 +56,6 @@ def set_thing(temp_list, index):
         index - the users choice from print_menu
     """
     try:
-        return temp_list[index][0]
+        return temp_list[(index - 1)][0]
     except:
         return None
