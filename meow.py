@@ -501,7 +501,7 @@ try:
 
     if __name__ == '__main__':
         app = Meow()
-        app = unlogged_in_menu()
+        app.unlogged_in_menu()
 
 except KeyboardInterrupt:
     curses.endwin()
