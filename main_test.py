@@ -78,10 +78,6 @@ class test_cart_handler(unittest.TestCase):
         self.assertIsInstance(thing, int)
 
     def test_build_cart_view(self):
-
-        pass
-
-    def test_delete_cart(self):
         pass
 
 
