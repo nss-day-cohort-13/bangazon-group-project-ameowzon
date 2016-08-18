@@ -70,8 +70,23 @@ class test_line_item(unittest.TestCase):
 
 class test_meow(unittest.TestCase):
 
+    def test_init(self):
+        self.meow_test = Meow()
+        self.assertEqual(self.meow_test.current_user, None)
+        self.assertEqual(self.meow_test.user_name, "")
+        self.assertEqual(self.meow_test.cart_id, None)
+
     def test_user_reset(self):
-        pass
+        self.meow_test = Meow()
+        self.meow_test.user_name = "megan"
+        self.meow_test.current_user = 4
+        self.meow_test.cart_id = 6
+        self.meow_test.reset_user()
+
+        self.assertEqual(self.meow_test.current_user, None)
+        self.assertEqual(self.meow_test.user_name, "")
+        self.assertEqual(self.meow_test.cart_id, None)
+
 
 if __name__ == '__main__':
     unittest.main()

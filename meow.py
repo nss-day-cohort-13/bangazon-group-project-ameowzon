@@ -186,6 +186,8 @@ try:
             Method Arguments: None
             """
             self.current_user = None
+            self.user_name = ""
+            self.cart_id = None
 
         def shop_menu(self):
 
