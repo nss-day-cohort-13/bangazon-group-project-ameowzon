@@ -19,10 +19,7 @@ def generate_new_customer(name="", address="", city="", state="", zipcode="", ph
 
         db.execute("select c.CustomerId from Customer c where c.FullName = ?", (name,))
         thing = db.fetchone()
-        try:
-            return thing[0]
-        except:
-            return None
+        return thing[0]
 
 
 def get_customer_name(customer_id):

@@ -47,7 +47,7 @@ def check_if_cart_exists(customer_id):
             except:
                 return None
 
-def clear_cart(cart_id):
+def clear_cart(cart_id):  # pragma: no cover
     with sqlite3.connect("bangazon.db") as database:
         db = database.cursor()
 

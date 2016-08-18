@@ -19,7 +19,7 @@ def new_order(cust_key):
         return cart_id[0]
 
 
-def add_payment_to_order(cust_key, payment_id):
+def add_payment_to_order(cust_key, payment_id):  # pragma: no cover
     """
     Adds a payment method to an open order
 

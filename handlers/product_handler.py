@@ -16,7 +16,7 @@ def read_product_from_db(input_file='bangazon.db'):
         try:
             db.execute("SELECT * FROM Product")
 
-        except sqlite3.OperationalError:
+        except sqlite3.OperationalError:  # pragma: no cover
             return False
 
         finally:
@@ -37,7 +37,7 @@ def get_product_from_db(prod_id, input_file='bangazon.db'):
         return product_name[0]
 
 
-def add_new_product(name, price):
+def add_new_product(name, price):  # pragma: no cover
     """
     If logged in as admin, add new product to product table
     ============

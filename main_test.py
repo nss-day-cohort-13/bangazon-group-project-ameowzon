@@ -5,8 +5,10 @@ import unittest
 class test_utility(unittest.TestCase):
 
     def test_set_thing(self):
-        # not sure this is testable since it relies heavily on print_menu, which relies heavily on the handler function sent in (tested in each handler below.)
-        pass
+        thing = set_thing([(2, "special thing"), (4, "not as special thing"), (6, "nope")], 2)
+        self.assertEqual(thing, 4)
+        thing2 = set_thing([(2, "special thing"), (4, "not as special thing"), (6, "nope")], 200)
+        self.assertEqual(thing2, None)
 
 
 class test_product(unittest.TestCase):
@@ -77,6 +79,8 @@ class test_cart_handler(unittest.TestCase):
         order_num = new_order(1)
         thing = check_if_cart_exists(1)
         self.assertIsInstance(thing, int)
+        thing2 = check_if_cart_exists(60000)
+        self.assertEqual(thing2, None)
 
     def test_build_cart_view(self):
         order_num = new_order(1)
@@ -102,6 +106,10 @@ class test_order(unittest.TestCase):
         # I don't know if we can test this since it's not returning anything.
         pass
 
+    def test_get_last_order_for_menu(self):
+        product_list = get_last_order_for_menu()
+        pass
+
 
 class test_line_item(unittest.TestCase):
 
@@ -110,6 +118,17 @@ class test_line_item(unittest.TestCase):
         pass
 
     def test_return_report_line_items(self):
+        thing = return_report_line_items()
+        self.assertIsInstance(thing, list)
+        self.assertIsInstance(thing[0], tuple)
+        self.assertEqual(len(thing[0]), 4)
+        self.assertIsInstance(thing[0][0], str)
+        self.assertIsInstance(thing[0][1], int)
+        self.assertIsInstance(thing[0][2], int)
+        self.assertIsInstance(thing[0][3], int)
+        pass
+
+    def test_return_report_totals(self):
         thing = return_report_totals()
         self.assertIsInstance(thing, list)
         self.assertIsInstance(thing[0], tuple)
