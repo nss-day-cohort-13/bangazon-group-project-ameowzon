@@ -1,5 +1,6 @@
 from meow import *
 import unittest
+import sqlite3
 
 
 class test_utility(unittest.TestCase):
@@ -36,6 +37,10 @@ class test_customer(unittest.TestCase):
     def test_generate_new_customer(self):
         thing = generate_new_customer("Amy", "111 street", "nash", "Tn", "44444", "5555555")
         self.assertIsInstance(thing, int)
+        # clean up db
+        with sqlite3.connect('bangazon.db') as conn:
+            c = conn.cursor()
+            c.execute("DELETE FROM Customer WHERE CustomerId=?", [thing])
 
     def test_get_customer_name(self):
         thing = get_customer_name(1)
@@ -173,5 +178,5 @@ class test_meow(unittest.TestCase):
         self.assertEqual(self.meow_test.cart_id, None)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     unittest.main()
