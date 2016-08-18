@@ -32,7 +32,8 @@ try:
             self.screen.addstr(14, 40, "3. View available products")
             self.screen.addstr(15, 40, "4. Generate report")
             self.screen.addstr(16, 40, "5. Exit")
-            self.screen.addstr(18, 40, '')
+            self.screen.addstr(18, 40, "6. Admin login")
+            self.screen.addstr(20, 40, '')
             self.screen.refresh()
 
             try:
@@ -54,6 +55,10 @@ try:
 
                 elif (choice == 5):  # Exit
                     self.quit_menu(self.unlogged_in_menu)
+
+                elif (choice == 6):
+                    self.admin_menu()
+
                 else:
                     self.unlogged_in_menu()
 
@@ -477,6 +482,9 @@ try:
                 self.logged_in_menu()
             else:
                 self.unlogged_in_menu()
+
+    def admin_menu(self):
+        pass
 
 
     if __name__ == '__main__':
