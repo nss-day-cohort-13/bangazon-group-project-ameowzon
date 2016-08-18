@@ -16,7 +16,6 @@ try:
             self.current_user = None
             self.user_name = ""
             self.cart_id = None
-            self.unlogged_in_menu()
 
         def unlogged_in_menu(self):
             """
@@ -519,7 +518,8 @@ try:
                 self.unlogged_in_menu()
 
     if __name__ == '__main__':
-        Meow()
+        app = Meow()
+        app = unlogged_in_menu()
 
 except KeyboardInterrupt:
     curses.endwin()
