@@ -72,13 +72,16 @@ class test_payment(unittest.TestCase):
 
 class test_cart_handler(unittest.TestCase):
 
+    def test_check_if_cart_exists(self):
+        order_num = new_order(1)
+        thing = check_if_cart_exists(1)
+        self.assertIsInstance(thing, int)
+
     def test_build_cart_view(self):
+        
         pass
 
     def test_delete_cart(self):
-        pass
-
-    def test_check_if_cart_exists(self):
         pass
 
 
