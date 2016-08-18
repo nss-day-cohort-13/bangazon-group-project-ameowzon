@@ -525,7 +525,26 @@ try:
             choice = str(chr(self.screen.getch()))
 
             if choice == '1':
-                pass
+                name = get_param('What is the name of the product?', self.screen)
+                price = int(get_param('What is the price of the product?', self.screen))
+
+                success = add_new_product(name, price)
+
+                if success:
+                    self.screen.clear()
+                    self.screen.border(0)
+                    self.screen.addstr(12, 40, 'Product added successfully!')
+                    self.screen.addstr(13, 40, 'Press any key to continue.')
+
+                    pause = chr(self.screen.getch())
+
+                else:
+                    self.screen.clear()
+                    self.screen.border(0)
+                    self.screen.addstr(12, 40, 'There was a problem adding that product.')
+                    self.screen.addstr(13, 40, 'Press any key to continue.')
+
+                    pause = chr(self.screen.getch())
 
             elif choice == '2':
                 self.screen.clear()
