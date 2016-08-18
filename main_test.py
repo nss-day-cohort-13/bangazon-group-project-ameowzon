@@ -72,22 +72,5 @@ class test_meow(unittest.TestCase):
     def test_user_reset(self):
         pass
 
-    def test_convert_cart_to_order(self):
-        pass
-
-    def test_set_current_user(self):
-        pass
-
-    def test_set_payment(self):
-        pass
-        # note this gets passed directly into convert card to order... maybe move it to the payment handler.
-
-    def test_calculate_cart_totals(self):
-        pass
-
-    def test_generate_report(self):
-        # not testing the actual printer, but we need to make sure the numbers output correctly. This should be the last thing we test.
-        pass
-
 if __name__ == '__main__':
     unittest.main()
