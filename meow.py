@@ -333,7 +333,7 @@ try:
                     self.screen.addstr(row, 40, "*" * 44)
                     row += 1
                     # loop over cart items and calculate total (grab price from 'products.txt')
-                    for index, item in cart_to_print:
+                    for item in cart_to_print:
                         # append total to list of totals (for amount due calculation)
                         total_list.append(item[2])
                         # limit product name
@@ -440,7 +440,7 @@ try:
             orders_lib = deserialize("data/orders.txt")
             products_lib = deserialize("data/products.txt")
 
-            ########## BUILD POPULARITY DICT ##########
+            # ######### BUILD POPULARITY DICT ##########
             # create dictionary with keys: product ids and values: dict of purchase info
             total_customers = set()
             li_dict = {obj.product_id: {"qty": 0, "customers": set(), "revenue": 0} for uid, obj in li_lib.items()}
@@ -460,7 +460,7 @@ try:
             row_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
             total_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
 
-            ########## PRINT REPORT ##########
+            # ######### PRINT REPORT ##########
             row = 5
             # self.screen.addstr(row, 40, str(li_lib))
             row += 1

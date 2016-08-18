@@ -1,4 +1,3 @@
-from objects.order_object import *
 import sqlite3
 
 def new_order(cust_key):

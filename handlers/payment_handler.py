@@ -1,4 +1,3 @@
-from objects.payment_object import *
 import sqlite3
 
 def generate_new_payment(name, account_number, cust_key):
