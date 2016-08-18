@@ -537,6 +537,7 @@ try:
                     self.screen.addstr(13, 40, 'Press any key to continue.')
 
                     pause = chr(self.screen.getch())
+                    self.admin_menu()
 
                 else:
                     self.screen.clear()
@@ -545,6 +546,7 @@ try:
                     self.screen.addstr(13, 40, 'Press any key to continue.')
 
                     pause = chr(self.screen.getch())
+                    self.admin_menu()
 
             elif choice == '2':
                 self.screen.clear()
