@@ -5,26 +5,33 @@ import unittest
 class test_utility(unittest.TestCase):
 
     def test_set_thing(self):
+        # not sure this is testable since it relies heavily on print_menu, which relies heavily on the handler function sent in (tested in each handler below.)
         pass
 
 
 class test_product(unittest.TestCase):
 
-    def read_product_from_db(self):
+    def test_read_product_from_db(self):
         thing = read_product_from_db()
-        self.assertIsInstance(thing, list)
-        self.assertIsInstance(thing[0], tuple)
-        self.assertNotEqual(len(thing), 0)
-        self.assertEqual(len(thing[0]), 3)
-        self.assertIsInstance(thing[0][0], int)
-        self.assertIsInstance(thing[0][1], str)
-        self.assertIsInstance(thing[0][2], int)
+        self.assertEqual(thing[1], True)
+        product_list = thing[0]
+        self.assertIsInstance(product_list, list)
+        self.assertIsInstance(product_list[0], tuple)
+        self.assertNotEqual(len(product_list), 0)
+        self.assertEqual(len(product_list[0]), 3)
+        self.assertIsInstance(product_list[0][0], int)
+        self.assertIsInstance(product_list[0][1], str)
+        self.assertIsInstance(product_list[0][2], int)
+
+    def test_get_product_from_db(self):
+        pass
 
 
 class test_customer(unittest.TestCase):
 
     def test_generate_new_customer(self):
-        pass
+        thing = generate_new_customer("Amy", "111 street", "nash", "Tn", "44444", "5555555")
+        self.assertIsInstance(thing, int)
 
     def test_get_customer_name(self):
         thing = get_customer_name(1)
@@ -32,11 +39,10 @@ class test_customer(unittest.TestCase):
         thing2 = get_customer_name(600)
         self.assertEqual(thing2, None)
 
-
     def test_generate_customer_menu(self):
         thing = generate_customer_menu()
-        user_list = thing[0]
         self.assertEqual(thing[1], False)
+        user_list = thing[0]
         self.assertIsInstance(user_list, list)
         self.assertIsInstance(user_list[0], tuple)
         self.assertNotEqual(len(user_list), 0)
