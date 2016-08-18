@@ -11,7 +11,7 @@ from handlers.admin_handler import *
 import curses
 
 try:
-    class Meow():
+    class Meow():  # pragma: no cover
         def __init__(self):
             # init curses
             self.screen = curses.initscr()
@@ -583,9 +583,9 @@ try:
             pause = self.screen.getch()
             return self.logged_in_menu()
 
-    if __name__ == '__main__':
+    if __name__ == '__main__':  # pragma: no cover
         app = Meow()
         app.unlogged_in_menu()
 
-except KeyboardInterrupt:
+except KeyboardInterrupt:  # pragma: no cover
     curses.endwin()

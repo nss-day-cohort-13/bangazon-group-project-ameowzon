@@ -2,7 +2,7 @@
 import uuid
 
 
-def get_param(prompt_string, screen):
+def get_param(prompt_string, screen):  # pragma: no cover
     """ Helper function for working with curses. Clears screen, sets border to 0
         creates a popup that displays the text of the prompt string passed in and
         captures and returns the input to the calling function. Returns a string.
@@ -20,7 +20,7 @@ def get_param(prompt_string, screen):
     return input
 
 
-def print_menu(handler_fn, screen, row_start, cid=None):
+def print_menu(handler_fn, screen, row_start, cid=None):  # pragma: no cover
     """ Prints a menu from an object list
         Method arguments
         ================
