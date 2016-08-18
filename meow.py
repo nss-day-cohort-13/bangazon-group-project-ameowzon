@@ -5,6 +5,7 @@ from handlers.order_handler import *
 from handlers.payment_handler import *
 from handlers.product_handler import *
 from handlers.cart_handler import *
+from handlers.admin_handler import *
 
 import curses
 
@@ -57,7 +58,7 @@ try:
                     self.quit_menu(self.unlogged_in_menu)
 
                 elif (choice == 6):
-                    self.admin_menu()
+                    self.verify_admin_menu()
 
                 else:
                     self.unlogged_in_menu()
@@ -483,8 +484,30 @@ try:
             else:
                 self.unlogged_in_menu()
 
-    def admin_menu(self):
-        pass
+        def verify_admin_menu(self):
+            """
+            Login verification for admin privileges
+            """
+            admin_id = get_param('What is your admin ID?', self.screen)
+            password = get_param('What is your password?', self.screen)
+
+            admin = verify_admin(admin_id, password)
+
+            if admin:
+                self.admin_menu()
+            else:
+                self.unlogged_in_menu()
+
+        def admin_menu(self):
+            """
+            Menu for admin privileges
+            """
+            self.screen.clear()
+            self.screen.border(0)
+            self.screen.addstr(12, 40, 'Logged in successfully as admin. Press any key to exit.')
+            self.screen.refresh()
+
+            pause = chr(self.screen.getch())
 
 
     if __name__ == '__main__':
