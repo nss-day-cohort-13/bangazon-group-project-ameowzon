@@ -272,8 +272,9 @@ try:
                     # print("command not recognized.")
                     self.add_to_cart_menu(prod_ID)
                 finally:
-                    #***#
-                    add_item_to_cart("data/customers.txt", self.current_user, prod_ID, quantity)
+                    # add (quantity) line items to open order (self.cart_id)
+                    for i in range(quantity + 1):
+                        generate_new_line_item(self.cart_id, prod_id)
                     row += 3
                     self.screen.addstr(row, 40, str(quantity) + " " + product_name + " added to cart.")
                     row += 3
