@@ -24,7 +24,7 @@ class test_product(unittest.TestCase):
         self.assertIsInstance(product_list[0][2], int)
 
     def test_get_product_from_db(self):
-        # wait
+        # HELP
         pass
 
 
@@ -78,7 +78,7 @@ class test_cart_handler(unittest.TestCase):
         self.assertIsInstance(thing, int)
 
     def test_build_cart_view(self):
-        
+
         pass
 
     def test_delete_cart(self):
@@ -88,16 +88,18 @@ class test_cart_handler(unittest.TestCase):
 class test_order(unittest.TestCase):
 
     def test_generate_new_order(self):
-        pass
+        order_num = new_order(1)
+        self.assertIsInstance(order_num, int)
 
     def test_add_payment_to_order(self):
+        # I don't know if we can test this since it's not returning anything.
         pass
 
 
 class test_line_item(unittest.TestCase):
 
     def test_generate_new_line_item(self):
-        # wait
+        # I don't think we can test this since it's not returning anything.
         pass
 
     def test_return_report_line_items(self):
