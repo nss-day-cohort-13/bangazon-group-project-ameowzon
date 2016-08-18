@@ -1,4 +1,3 @@
-from objects.order_object import *
 import sqlite3
 
 
@@ -18,7 +17,6 @@ def new_order(cust_key):
             AND o.PaymentId IS ?""", (cust_key, None))
         cart_id = c.fetchone()
         return cart_id[0]
-
 
 
 def add_payment_to_order(cust_key, payment_id):

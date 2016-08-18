@@ -64,4 +64,7 @@ def check_if_cart_exists(customer_id):
                             WHERE o.CustomerID = ?
                             AND o.PaymentID IS NULL""", (customer_id,))
             cart = db.fetchone()
-            return cart[0]
+            try:
+                return cart[0]
+            except:
+                return None

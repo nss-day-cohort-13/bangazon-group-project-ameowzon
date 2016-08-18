@@ -18,7 +18,6 @@ try:
             self.current_user = None
             self.user_name = ""
             self.cart_id = None
-            self.unlogged_in_menu()
 
         def unlogged_in_menu(self):
             """
@@ -194,6 +193,8 @@ try:
             Method Arguments: None
             """
             self.current_user = None
+            self.user_name = ""
+            self.cart_id = None
 
         def shop_menu(self):
 
@@ -440,6 +441,7 @@ try:
             self.screen.clear()
             self.screen.border(0)
             # initial method setup
+
             report_list = return_report_line_items()
             total_list = return_report_totals()
 
@@ -447,7 +449,7 @@ try:
             row_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
             total_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
 
-            ########## PRINT REPORT ##########
+            # ######### PRINT REPORT ##########
             row = 5
 
             self.screen.addstr(row, 40, heading_string.format("Products", "Orders", "Customers", "Revenue"))
@@ -580,10 +582,8 @@ try:
             return self.logged_in_menu()
 
     if __name__ == '__main__':
-        # Meow().print_hey()
-        # print_hello()
-        # Meow().unlogged_in_menu()
-        Meow()
+        app = Meow()
+        app.unlogged_in_menu()
 
 except KeyboardInterrupt:
     curses.endwin()
