@@ -11,10 +11,13 @@ class test_utility(unittest.TestCase):
 class test_product(unittest.TestCase):
 
     def read_product_from_db(self):
-        pass
-
-    def generate_product_list(self):
-        pass
+        thing = read_product_from_db()
+        self.assertIsInstance(thing, list)
+        self.assertIsInstance(thing[0], tuple)
+        self.assertNotEqual(len(thing), 0)
+        self.assertIsInstance(thing[0][0], int)
+        self.assertIsInstance(thing[0][1], str)
+        self.assertIsInstance(thing[0][2], int)
 
 
 class test_customer(unittest.TestCase):
