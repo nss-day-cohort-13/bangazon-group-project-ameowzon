@@ -40,6 +40,6 @@ def get_last_order_for_menu():
         db = conn.cursor()
         db.execute("""SELECT p.* FROM Orders o, LineItem li, Product p WHERE o.OrderId == (SELECT o.OrderId
             FROM Orders o ORDER BY OrderId DESC LIMIT 1) AND li.OrderId == (SELECT o.OrderId
-            FROM Orders o ORDER BY OrderId DESC LIMIT 1) AND p.ProductID == li.ProductID""")
+            FROM Orders o ORDER BY OrderId DESC LIMIT 1) AND p.ProductID == li.ProductID AND o.PaymentId IS NOT NULL""")
 
         return db.fetchall()
