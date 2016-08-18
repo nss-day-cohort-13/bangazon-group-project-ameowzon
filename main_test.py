@@ -65,7 +65,13 @@ class test_line_item(unittest.TestCase):
         pass
 
     def test_return_report_line_items(self):
-        pass
+        thing = return_report_totals()
+        self.assertIsInstance(thing, list)
+        self.assertIsInstance(thing[0], tuple)
+        self.assertEqual(len(thing[0]), 3)
+        self.assertIsInstance(thing[0][0], int)
+        self.assertIsInstance(thing[0][1], int)
+        self.assertIsInstance(thing[0][2], int)
 
 
 class test_meow(unittest.TestCase):
