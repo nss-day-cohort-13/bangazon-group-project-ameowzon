@@ -462,6 +462,8 @@ try:
             order_sum = (str(total_list[0][0]) if len(str(total_list[0][0])) <= 17 else str(total_list[0][0])[:14] + "...") + " "
             customer_sum = (str(total_list[0][1]) if len(str(total_list[0][1])) <= 11 else str(total_list[0][1])[:8] + "...")
             revenue_sum = (str(total_list[0][2]) if len(str(total_list[0][2])) <= 14 else str(total_list[0][2])[:11] + "...")
+            self.screen.addstr(row, 40, "*" * 55)
+            row += 1
             # add row to screen
             self.screen.addstr(row, 40, total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
             # increment row by 1
