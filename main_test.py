@@ -24,6 +24,7 @@ class test_product(unittest.TestCase):
         self.assertIsInstance(product_list[0][2], int)
 
     def test_get_product_from_db(self):
+        # wait
         pass
 
 
@@ -50,13 +51,23 @@ class test_customer(unittest.TestCase):
         self.assertIsInstance(user_list[0][0], int)
         self.assertIsInstance(user_list[0][1], str)
 
+
 class test_payment(unittest.TestCase):
 
     def test_generate_new_payment(self):
-        pass
+        thing = generate_new_payment("Visa", "3", 4)
+        self.assertIsInstance(thing, int)
 
-    def test_generate_payment_options_list(self):
-        pass
+    def test_generate_payment_menu(self):
+        thing = generate_payments_menu(2)
+        self.assertEqual(thing[1], False)
+        payment_list = thing[0]
+        self.assertIsInstance(payment_list, list)
+        self.assertIsInstance(payment_list[0], tuple)
+        self.assertNotEqual(len(payment_list), 0)
+        self.assertEqual(len(payment_list[0]), 2)
+        self.assertIsInstance(payment_list[0][0], int)
+        self.assertIsInstance(payment_list[0][1], str)
 
 
 class test_cart_handler(unittest.TestCase):
@@ -83,6 +94,7 @@ class test_order(unittest.TestCase):
 class test_line_item(unittest.TestCase):
 
     def test_generate_new_line_item(self):
+        # wait
         pass
 
     def test_return_report_line_items(self):
