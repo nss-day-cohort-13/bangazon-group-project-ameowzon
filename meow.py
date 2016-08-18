@@ -221,7 +221,7 @@ try:
                 self.view_cart(row)
 
                 try:
-                    next_step = chr(self.screen.getch())
+                    next_step = bytes.decode(self.screen.getstr(15, 40, 60))
                     row += 1
                     if next_step == "x":  # Exit.
                         self.quit_menu(self.shop_menu)
