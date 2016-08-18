@@ -125,9 +125,11 @@ try:
                 back_to_menu()
 
         def user_menu(self):
-            # generate the customer menu.
-            # for each customer item, use get_value to print the name value.
-            # request input for which user.
+            """
+            Prints the list of users currently created, and requests input from the user for whether they'd like to choose one of the options to log into, or go back.
+            ========
+            Method Arguments: None
+            """
             self.screen.clear()
             self.screen.border(0)
             self.screen.addstr(11, 40, "'q to quit, b to go back.")
@@ -158,10 +160,11 @@ try:
                         self.logged_in_menu()
 
         def create_new_user(self):
-            # request input for all the things.
-            # pass all the input into the create_new_user.
-            # set the current user to the UID that returns,
-            # then print the logged in menu.
+            """
+            Requests input for each of the parameters required to create a new user (name, address, city, state, zip, and phone). Passes the information into generate_new_customer and receives the UID back, which it sets to the current user. Sets the user_name top-level variable (which is printed as a greeting in the logged in menu) and directs to the logged in menu.
+            ========
+            Method Arguments: none
+            """
             name = get_param('What is your name?', self.screen)
             address = get_param('What is your street address?', self.screen)
             city = get_param('What city do you live in?', self.screen)
@@ -170,33 +173,32 @@ try:
             phone = get_param('What is your phone number?', self.screen)
 
             try:
-                new_uid = generate_new_customer(name, address, city, state, zipcode, phone)
-                self.set_user(new_uid)
+                self.current_user = generate_new_customer(name, address, city, state, zipcode, phone)
                 self.user_name = name
                 self.logged_in_menu()
             except:
                 self.unlogged_in_menu()
 
-        def set_user(self, user_id):
-            # set user ID to current user.
-            self.current_user = user_id
-
         def reset_user(self):
-            # set current user to none. that's it.
+            """
+            Sets current user to none as part of logging out.
+            ========
+            Method Arguments: None
+            """
             self.current_user = None
 
         def shop_menu(self):
 
             """
-            This function prints a list of products and prices from products.txt, saved as a index-uid dictionary in a scoped product_menu variable.  Then it requests next_step input from the user. If the user is not logged in, the only subsequent options are to go back or exit. If the user is logged in, they have the option of adding an item to their cart (via product_menu) or completing their order via payment_options_menu.
+            Prints a list of products and prices from the products table in bangazon.db. Then requests next_step input from the user. If the user is not logged in, the only subsequent options are to go back or exit. If the user is logged in, their cart prints via view_cart, and they have the option of adding an item to their cart (via product_menu) or completing their order via payment_options_menu.
             ==========
             Method Arguments: none.
             """
-            # load_product_library and for each available product index, get_value to print the name and price.
             self.screen.clear()
             self.screen.border(0)
 
             row = 3
+            # load_product_library and for each available product index, get_value to print the name and price.
             product_list = print_menu(read_product_from_db, self.screen, row)
             row += len(product_list)
 
