@@ -519,9 +519,6 @@ try:
                 self.unlogged_in_menu()
 
     if __name__ == '__main__':
-        # Meow().print_hey()
-        # print_hello()
-        # Meow().unlogged_in_menu()
         Meow()
 
 except KeyboardInterrupt:
