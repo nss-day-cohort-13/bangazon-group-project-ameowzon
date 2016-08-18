@@ -355,7 +355,7 @@ try:
             # add payment id to customers open order, direct to logged-in menu
             add_payment_to_order(self.current_user, payment_uid)
             self.cart_id = None
-            self.logged_in_menu()
+            self.show_purchased_menu()
 
         def payment_options_menu(self, completing=False):
             self.screen.clear()
@@ -407,7 +407,7 @@ try:
                     except ValueError:
                         self.payment_options_menu(completing=True)
                     finally:
-                        if next_step >= 0 and next_step < len(payment_list):
+                        if next_step >= 0 and next_step <= len(payment_list):
                             payment_uid = set_thing(payment_list, next_step)
                             self.convert_to_completed(payment_uid)
                         else:
