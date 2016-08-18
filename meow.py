@@ -1,4 +1,5 @@
 
+
 from handlers.customer_handler import *
 from handlers.line_item_handler import *
 from handlers.order_handler import *
@@ -431,25 +432,8 @@ try:
             self.screen.clear()
             self.screen.border(0)
             # initial method setup
-            li_lib = deserialize("data/line_items.txt")
-            orders_lib = deserialize("data/orders.txt")
-            products_lib = deserialize("data/products.txt")
-
-            ########## BUILD POPULARITY DICT ##########
-            # create dictionary with keys: product ids and values: dict of purchase info
-            total_customers = set()
-            li_dict = {obj.product_id: {"qty": 0, "customers": set(), "revenue": 0} for uid, obj in li_lib.items()}
-            # loop through all line items and populate corresponding product keys with appropriate info
-            for uid, obj in li_lib.items():
-                customer = orders_lib[obj.order_id].customer_id
-                li_dict[obj.product_id]["qty"] += 1
-                li_dict[obj.product_id]["customers"].add(customer)
-                total_customers.add(customer)
-            # self.screen.addstr(1, 20, str(li_dict))
-            # calculate revenue
-            for product, info in li_dict.items():
-                price = products_lib[product]["price"]
-                info["revenue"] = info["qty"] * price
+            report_list = return_report_line_items()
+            total_list = return_report_totals()
 
             heading_string = "{0:<18}{1:<11}{2:<11}{3:<15}"
             row_string = "{0:<18}{1:<11}{2:<11}${3:<14}"
@@ -457,61 +441,59 @@ try:
 
             ########## PRINT REPORT ##########
             row = 5
-            # self.screen.addstr(row, 40, str(li_lib))
-            row += 1
-            # print(total_string.format("Products", "Orders", "Customers", "Revenue"))
+
             self.screen.addstr(row, 40, heading_string.format("Products", "Orders", "Customers", "Revenue"))
             row += 1
             self.screen.addstr(row, 40, "*" * 55)
             row += 1
-            # print("*" * 55)
-            order_list, customer_list, revenue_list = [], [], []
-            for product, info in li_dict.items():
-                # set product names
-                product_name = products_lib[product]['name']
-                order = info["qty"]
-                customers = info["customers"]
-                revenue = info["revenue"]
 
-                # add values to lists (to be used in totals calculation)
-                order_list.append(order)
-                customer_list.append(customer)
-                revenue_list.append(revenue)
-
+            for report_row in report_list:
                 # limit display names/values
-                product_name = (product_name if len(product_name) <= 17 else product_name[:14] + "...") + " "
-                order = (str(order) if len(str(order)) <= 11 else str(order[:8]) + "...") + " "
-                customers = (len(customers) if len(customers) <= 11 else len(customers)[:8] + "...")
-                revenue = (str(revenue) if len(str(revenue)) <= 14 else str(revenue[:11]) + "...")
-
-                # print product info
+                product_name = (report_row[0] if len(report_row[0]) <= 17 else report_row[0][:14] + "...") + " "
+                order = (str(report_row[1]) if len(str(report_row[1])) <= 11 else str(report_row[1])[:8] + "...") + " "
+                customers = (str(report_row[2]) if len(str(report_row[2])) <= 11 else str(report_row[2])[:8] + "...")
+                revenue = (str(str(report_row[3])) if len(str(str(report_row[3]))) <= 14 else str(report_row[3])[:11] + "...")
+                # add row to screen
                 self.screen.addstr(row, 40, row_string.format(product_name, order, customers, revenue))
-                # print(row_string.format(product_name, order, customers, revenue))
+                # increment row by 1
                 row += 1
-            self.screen.addstr(row, 40, "*" * 55)
-            # print("*" * 55)
-
-            # calculate totals
-            order_sum = sum(order_list)
-            customer_sum = len(total_customers)
-            revenue_sum = sum(revenue_list)
 
             # limit totals display
-            order_sum = (str(order_sum) if len(str(order_sum)) <= 17 else str(order_sum[:14]) + "...") + " "
-            customer_sum = (str(customer_sum) if len(str(customer_sum)) <= 11 else str(customer_sum[:8]) + "...")
-            revenue_sum = (str(revenue_sum) if len(str(revenue_sum)) <= 14 else str(revenue_sum[:11]) + "...")
-
-            # print totals
-            row += 1
+            order_sum = (str(total_list[0][0]) if len(str(total_list[0][0])) <= 17 else str(total_list[0][0])[:14] + "...") + " "
+            customer_sum = (str(total_list[0][1]) if len(str(total_list[0][1])) <= 11 else str(total_list[0][1])[:8] + "...")
+            revenue_sum = (str(total_list[0][2]) if len(str(total_list[0][2])) <= 14 else str(total_list[0][2])[:11] + "...")
+            # add row to screen
             self.screen.addstr(row, 40, total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
-            # print(total_string.format("Totals:", order_sum, customer_sum, revenue_sum))
-            row += 1
-            self.screen.addstr(row, 40, "press any key to continue")
+            # increment row by 1
+            row += 2
+
+            self.screen.addstr(row, 40, "Press any key to continue")
             choice = chr(self.screen.getch())
             if self.current_user is not None:
                 self.logged_in_menu()
             else:
                 self.unlogged_in_menu()
+
+        def show_purchased_menu(self):
+            """
+            Shows the most recently purchased items in a curses menu
+            """
+
+            self.screen.clear()
+            self.screen.border(0)
+            result = get_last_order_for_menu()
+            self.screen.addstr(6, 40, "Order complete. Press any key to continue")
+            row = 8
+            total = 0
+
+            for entry in result:
+                self.screen.addstr(row, 40, "{0} - {1}".format(entry[1], entry[2]))
+                total += int(entry[2])
+                row += 1
+            row += 2
+            self.screen.addstr(row, 40, "Total = {0}".format(total))
+            pause = self.screen.getch()
+            return self.logged_in_menu()
 
     if __name__ == '__main__':
         # Meow().print_hey()

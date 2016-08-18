@@ -1,6 +1,7 @@
 from objects.order_object import *
 import sqlite3
 
+
 def new_order(cust_key):
     """
     Create new order row in db, return order id
@@ -19,6 +20,7 @@ def new_order(cust_key):
         return cart_id[0]
 
 
+
 def add_payment_to_order(cust_key, payment_id):
     """
     Adds a payment method to an open order
@@ -29,3 +31,17 @@ def add_payment_to_order(cust_key, payment_id):
         c = conn.cursor()
         c.execute("UPDATE Orders SET PaymentId=? WHERE CustomerId=? AND PaymentId IS ?", (payment_id, cust_key, None))
         conn.commit()
+
+
+def get_last_order_for_menu():
+    """
+    Returns the most recently purchased item to the Meow show purchased menu
+    """
+
+    with sqlite3.connect("bangazon.db") as conn:
+        db = conn.cursor()
+        db.execute("""SELECT p.* FROM Orders o, LineItem li, Product p WHERE o.OrderId == (SELECT o.OrderId
+            FROM Orders o ORDER BY OrderId DESC LIMIT 1) AND li.OrderId == (SELECT o.OrderId
+            FROM Orders o ORDER BY OrderId DESC LIMIT 1) AND p.ProductID == li.ProductID""")
+
+        return db.fetchall()
