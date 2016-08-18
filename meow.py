@@ -97,7 +97,10 @@ try:
                 elif choice == 5:
                     self.quit_menu(self.logged_in_menu)
 
-            except ValueError:
+            except ValueError as ex:
+                self.screen.addstr(29, 40, str(ex))
+                self.screen.addstr(30, 40, str(type(choice)))
+                error = chr(self.screen.getch())
                 self.logged_in_menu()
 
         def quit_menu(self, back_to_menu):
@@ -231,7 +234,7 @@ try:
                             self.shop_menu()
                         finally:
                             row += 2
-                            if next_step >= 0 and next_step < len(product_list):
+                            if next_step >= 0 and next_step < (len(product_list) + 1):
                                 prod_id = set_thing(product_list, next_step)
                                 self.add_to_cart_menu(prod_id)
                             else:
@@ -266,7 +269,7 @@ try:
             self.screen.clear()
             self.screen.border(0)
             row = 4
-            product_name = get_product_name(prod_id)
+            product_name = get_product_from_db(prod_ID)
             self.screen.addstr(row, 22, "how many " + product_name + "'s would you like to add?")
             # print("how many" + prod_id["name"] + "s would you like to add?")
             row += 1
@@ -287,17 +290,15 @@ try:
                     self.add_to_cart_menu(prod_ID)
                 finally:
                     # add (quantity) line items to open order (self.cart_id)
-                    for i in range(quantity + 1):
-                        generate_new_line_item(self.cart_id, prod_id)
+                    for i in range(quantity):
+                        generate_new_line_item(self.cart_id, prod_ID)
                     row += 3
                     self.screen.addstr(row, 40, str(quantity) + " " + product_name + " added to cart.")
                     row += 3
                     self.screen.addstr(row, 40, "Press 'any key' to return to shopping menu.")
 
                     quantity = chr(self.screen.getch())
-
-                    if (quantity):
-                        self.shop_menu()
+                    self.shop_menu()
 
                     # print(quantity + item_to_add["name"] + " added to cart.")
                     # self.shop_menu()
@@ -333,7 +334,7 @@ try:
                     self.screen.addstr(row, 40, "*" * 44)
                     row += 1
                     # loop over cart items and calculate total (grab price from 'products.txt')
-                    for index, item in cart_to_print:
+                    for item in cart_to_print:
                         # append total to list of totals (for amount due calculation)
                         total_list.append(item[2])
                         # limit product name
